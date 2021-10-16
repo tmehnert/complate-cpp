@@ -1,7 +1,7 @@
 # complate-cpp
 *- Rendering of JSX based views in C++*
 
-![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 [complate](https://complate.org) adapter that can be used in C++ 17 projects to
 render JSX based HTML views. This project was inspired by
