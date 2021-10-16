@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ main, setup-ci-build-and-test ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
 
