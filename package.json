@@ -1,0 +1,20 @@
+{
+  "name": "complate-cpp",
+  "version": "0.0.1",
+  "description": "Complate adapter for C++",
+  "author": "Torsten Mehnert",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "npm run compile -- --watch",
+    "compile": "faucet --compact"
+  },
+  "dependencies": {
+    "complate-stream": "^0.16.9"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.14.9",
+    "faucet-pipeline-esnext": "^2.1.7",
+    "faucet-pipeline-js": "^2.1.7"
+  }
+}
