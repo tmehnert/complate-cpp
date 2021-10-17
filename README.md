@@ -66,7 +66,18 @@ cmake -DBUILD_TESTS=on ..
 make && make test
 ```
 
+### Dependencies
+* QuickJS, MIT Licence (bundled)
+* V8, MIT Licence
+
+#### Dev dependencies
+* Catch2, BSL-1.0 (bundled)
+* Trompeloeil, BSL-1.0 (bundled)
+* cpp-httplib, MIT License (bundled)
+* Node.js
+* CMake
+
 ## License
 complate-cpp is Open Source software released under the [Apache 2.0 license](LICENSE).
 
-See [LICENCE](LICENSE) for information about bundled software.
+See [LICENCE](LICENSE) for more information about bundled software.
