@@ -57,9 +57,12 @@ sudo ldconfig
 ```
 
 ### Compatibility
-Currently this project is only tested under Ubuntu 20.04 (x86_64)
-with gcc 9.3.0. Please run the following commands to run the Unittests for your
-System.
+The library is tested with following compilers.
+* GCC 7 - 10 (on Ubuntu 20.04)
+* Clang 7 - 12 (on Ubuntu 20.04)
+
+#### Running Tests
+Type following commands to run the unittests on your system.
 ```shell
 mkdir build && cd build
 cmake -DBUILD_TESTS=on ..

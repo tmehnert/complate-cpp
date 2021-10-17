@@ -7,32 +7,82 @@ on:
     branches: [ main ]
 
 env:
-  BUILD_TYPE: Release
   BUILD_TESTS: on
   BUILD_EXAMPLE: on
 
 jobs:
   build:
+    name: ${{matrix.cc}}, ${{matrix.build_type}}
     runs-on: ubuntu-20.04
-
+    strategy:
+      fail-fast: false
+      matrix:
+        cc:
+          - gcc-7
+          - gcc-8
+          - gcc-9
+          - gcc-10
+          - clang-7
+          - clang-8
+          - clang-9
+          - clang-10
+          - clang-11
+          - clang-12
+        build_type: [Debug, Release]
+        include:
+          - cc: gcc-7
+            cxx: g++-7
+            package: g++-7
+          - cc: gcc-8
+            cxx: g++-8
+            package: g++-8
+          - cc: gcc-9
+            cxx: g++-9
+            package: g++-9
+          - cc: gcc-10
+            cxx: g++-10
+            package: g++-10
+          - cc: clang-7
+            cxx: clang++-7
+            package: clang-7
+          - cc: clang-8
+            cxx: clang++-8
+            package: clang-8
+          - cc: clang-9
+            cxx: clang++-9
+            package: clang-9
+          - cc: clang-10
+            cxx: clang++-10
+            package: clang-10
+          - cc: clang-11
+            cxx: clang++-11
+            package: clang-11
+          - cc: clang-12
+            cxx: clang++-12
+            package: clang-12
     steps:
       - uses: actions/checkout@v2
 
       - name: Install Dependencies
-        run: sudo apt-get install -y libv8-dev
+        run: sudo apt-get install -y libv8-dev ${{matrix.package}}
 
       - name: Configure CMake
+        env:
+          CC: ${{matrix.cc}}
+          CXX: ${{matrix.cxx}}
         run: |
           cmake -B ${{github.workspace}}/build \
-            -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+            -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
             -DBUILD_TESTS=${{env.BUILD_TESTS}} \
             -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}}
 
       - name: Build
+        env:
+          CMAKE_BUILD_PARALLEL_LEVEL: 2
         run: |
           cmake --build ${{github.workspace}}/build \
-            --config ${{env.BUILD_TYPE}}
+            --config ${{matrix.build_type}}
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
+        run: ctest -C ${{matrix.build_type}} --output-on-failure

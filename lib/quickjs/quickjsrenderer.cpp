@@ -38,6 +38,7 @@ public:
         m_streamAdapter(m_context),
         m_mapper(m_context, prototypes),
         m_bindings(move(bindings)) {
+    JS_SetMaxStackSize(m_runtime, NO_STACK_LIMIT);
     ensureConsoleDefined(m_bindings);
     m_mapper.fromObject(m_bindings, m_global);
   }
@@ -69,6 +70,7 @@ public:
   }
 
 private:
+  static const size_t NO_STACK_LIMIT = 0;
   mutex m_mutex;
   JSRuntime *m_runtime;
   JSContext *m_context;

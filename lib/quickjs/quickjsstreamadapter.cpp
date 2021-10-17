@@ -21,9 +21,6 @@ using namespace complate;
 using namespace std;
 
 JSClassID QuickJsStreamAdapter::ms_class_id = 0;
-const JSCFunctionListEntry QuickJsStreamAdapter::msc_functions[] = {
-    JS_CFUNC_DEF("write", 1, write), JS_CFUNC_DEF("writeln", 1, writeln),
-    JS_CFUNC_DEF("flush", 0, flush)};
 
 QuickJsStreamAdapter::QuickJsStreamAdapter(JSContext *context)
     : m_context(context) {
@@ -52,7 +49,8 @@ void QuickJsStreamAdapter::registerClass(JSContext *context) {
   }
 
   JSValue proto = JS_NewObject(context);
-  JS_SetPropertyFunctionList(context, proto, msc_functions, 3);
+  JS_SetPropertyFunctionList(context, proto, MSCE_FUNCTIONS.data(),
+                             MSCE_FUNCTIONS.size());
   JS_SetClassProto(context, ms_class_id, proto);
 }
 
