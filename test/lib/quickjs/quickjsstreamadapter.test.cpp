@@ -19,7 +19,6 @@
 #include "catch2/catch.hpp"
 #include "core/stream.mock.h"
 #include "quickjs.h"
-#include "trompeloeil/catch2/trompeloeil.hpp"
 
 using namespace trompeloeil;
 using namespace complate;
