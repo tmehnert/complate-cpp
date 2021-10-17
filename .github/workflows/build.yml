@@ -49,6 +49,8 @@ jobs:
             -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}}
 
       - name: Build
+        env:
+          CMAKE_BUILD_PARALLEL_LEVEL: 2
         run: |
           cmake --build ${{github.workspace}}/build \
             --config ${{env.BUILD_TYPE}}
