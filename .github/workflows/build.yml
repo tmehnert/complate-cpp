@@ -12,7 +12,7 @@ env:
 
 jobs:
   build:
-    if: ${{ false }}  # disable because i want to try things out wuth macos
+    if: ${{ false }}  # disable because i want to try things out with macos
     name: ${{matrix.cc}}, ${{matrix.build_type}}
     runs-on: ubuntu-20.04
     strategy:
@@ -66,6 +66,42 @@ jobs:
 
       - name: Install Dependencies
         run: sudo apt-get install -y libv8-dev ${{matrix.package}}
+
+      - name: Configure CMake
+        env:
+          CC: ${{matrix.cc}}
+          CXX: ${{matrix.cxx}}
+        run: |
+          cmake -B ${{github.workspace}}/build \
+            -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
+            -DBUILD_TESTS=${{env.BUILD_TESTS}} \
+            -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}}
+
+      - name: Build
+        env:
+          CMAKE_BUILD_PARALLEL_LEVEL: 2
+        run: |
+          cmake --build ${{github.workspace}}/build \
+            --config ${{matrix.build_type}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{matrix.build_type}} --output-on-failure
+
+  build-macos:
+    name: MacOS, ${{matrix.cc}}, ${{matrix.build_type}}
+    runs-on: macos-10.15
+    strategy:
+      fail-fast: false
+      matrix:
+        cc:
+          - gcc-9
+        build_type: [Debug]
+        include:
+          - cc: gcc-9
+            cxx: g++-9
+    steps:
+      - uses: actions/checkout@v2
 
       - name: Configure CMake
         env:
