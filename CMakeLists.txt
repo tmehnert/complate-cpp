@@ -44,6 +44,7 @@ add_subdirectory(lib/quickjs)
 add_subdirectory(lib/v8)
 
 if (BUILD_EXAMPLE)
+    include(cmake/CppHttplib.cmake)
     add_subdirectory(example)
 endif ()
 

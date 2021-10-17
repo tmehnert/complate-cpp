@@ -21,8 +21,11 @@ include_directories(${CMAKE_SOURCE_DIR}/deps/cpp-httplib)
 add_executable(${BINARY} ${SOURCES})
 
 target_link_libraries(${BINARY} LINK_PUBLIC
+        httplib::httplib
         ${CMAKE_PROJECT_NAME}core
         ${CMAKE_PROJECT_NAME}quickjs
         ${CMAKE_THREAD_LIBS_INIT})
+
+target_include_directories(${BINARY} SYSTEM PRIVATE ${httplib_SOURCE_DIR})
 
 target_compile_definitions(${BINARY} PUBLIC TEST_RESOURCE_DIR="${CMAKE_SOURCE_DIR}/test/resources/")
