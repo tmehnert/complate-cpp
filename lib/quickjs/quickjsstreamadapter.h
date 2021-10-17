@@ -17,9 +17,11 @@
 
 #include <complate/core/stream.h>
 
+#include <array>
 #include <memory>
 
 #include "quickjs.h"
+#include "quickjsfunctionlistentry.h"
 
 namespace complate {
 
@@ -32,7 +34,6 @@ public:
 private:
   JSContext *m_context;
   static JSClassID ms_class_id;
-  static const JSCFunctionListEntry msc_functions[];
 
   static void registerClass(JSContext *context);
 
@@ -42,5 +43,10 @@ private:
                          JSValueConst *argv);
   static JSValue flush(JSContext *ctx, JSValueConst this_val, int argc,
                        JSValueConst *argv);
+
+  static constexpr std::array<JSCFunctionListEntry, 3> MSCE_FUNCTIONS{
+      QuickJsFunctionListEntry::cfunc("write", 1, write),
+      QuickJsFunctionListEntry::cfunc("writeln", 1, writeln),
+      QuickJsFunctionListEntry::cfunc("flush", 0, flush)};
 };
 }  // namespace complate
