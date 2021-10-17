@@ -49,6 +49,7 @@ endif ()
 
 if (BUILD_TESTS)
     include(cmake/Catch2.cmake)
+    include(cmake/Trompeloeil.cmake)
     enable_testing()
     add_subdirectory(test/lib)
 endif ()

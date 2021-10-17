@@ -72,7 +72,7 @@ make && make test
 
 #### Dev dependencies
 * Catch2, BSL-1.0 (fetched via CMake)
-* Trompeloeil, BSL-1.0 (bundled)
+* Trompeloeil, BSL-1.0 (fetched via CMake)
 * cpp-httplib, MIT License (bundled)
 * Node.js
 * CMake

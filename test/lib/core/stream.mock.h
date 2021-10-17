@@ -17,7 +17,7 @@
 
 #include <complate/core/stream.h>
 
-#include "trompeloeil/trompeloeil.hpp"
+#include "trompeloeil.hpp"
 
 namespace complate {
 

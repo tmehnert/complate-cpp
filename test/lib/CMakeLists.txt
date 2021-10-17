@@ -15,7 +15,7 @@ set(BINARY ${CMAKE_PROJECT_NAME}-tests)
 find_package(Threads)
 
 include_directories(.)
-include_directories(SYSTEM ../deps /usr/include/v8 ${CMAKE_SOURCE_DIR}/deps/quickjs)
+include_directories(SYSTEM /usr/include/v8 ${CMAKE_SOURCE_DIR}/deps/quickjs)
 
 file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.h *.cpp)
 set(SOURCES ${TEST_SOURCES})
@@ -25,6 +25,7 @@ add_test(NAME ${BINARY} COMMAND ${BINARY})
 
 target_link_libraries(${BINARY} PUBLIC
         Catch2::Catch2
+        trompeloeil
         ${CMAKE_THREAD_LIBS_INIT}
         ${CMAKE_PROJECT_NAME}core
         ${CMAKE_PROJECT_NAME}quickjs
