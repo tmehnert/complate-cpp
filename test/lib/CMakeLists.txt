@@ -24,6 +24,7 @@ add_executable(${BINARY} ${TEST_SOURCES})
 add_test(NAME ${BINARY} COMMAND ${BINARY})
 
 target_link_libraries(${BINARY} PUBLIC
+        Catch2::Catch2
         ${CMAKE_THREAD_LIBS_INIT}
         ${CMAKE_PROJECT_NAME}core
         ${CMAKE_PROJECT_NAME}quickjs

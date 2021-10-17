@@ -11,7 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.14)
 project(complate VERSION 0.0.1 DESCRIPTION "C++ library to render JSX-Components into HTML")
 
 option(BUILD_TESTS "Build unit tests" OFF)
@@ -48,6 +48,7 @@ if (BUILD_EXAMPLE)
 endif ()
 
 if (BUILD_TESTS)
+    include(cmake/Catch2.cmake)
     enable_testing()
     add_subdirectory(test/lib)
 endif ()

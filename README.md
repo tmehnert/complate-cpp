@@ -71,7 +71,7 @@ make && make test
 * V8, MIT Licence
 
 #### Dev dependencies
-* Catch2, BSL-1.0 (bundled)
+* Catch2, BSL-1.0 (fetched via CMake)
 * Trompeloeil, BSL-1.0 (bundled)
 * cpp-httplib, MIT License (bundled)
 * Node.js
