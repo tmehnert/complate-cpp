@@ -13,15 +13,29 @@ env:
 
 jobs:
   build:
+    name: ${{matrix.cc}}
     runs-on: ubuntu-20.04
-
+    strategy:
+      fail-fast: false
+      matrix:
+        cc:
+          - gcc-9
+          - gcc-10
+        include:
+          - cc: gcc-9
+            cxx: g++-9
+          - cc: gcc-10
+            cxx: g++-10
     steps:
       - uses: actions/checkout@v2
 
       - name: Install Dependencies
-        run: sudo apt-get install -y libv8-dev
+        run: sudo apt-get install -y libv8-dev ${{matrix.cc}}
 
       - name: Configure CMake
+        env:
+          CC: ${{matrix.cc}}
+          CXX: ${{matrix.cxx}}
         run: |
           cmake -B ${{github.workspace}}/build \
             -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
