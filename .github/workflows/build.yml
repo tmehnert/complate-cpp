@@ -29,7 +29,10 @@ jobs:
             -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}}
 
       - name: Build
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        run: |
+          cmake --build ${{github.workspace}}/build \
+            --config ${{env.BUILD_TYPE}} \
+            --output-on-failure
 
       - name: Test
         working-directory: ${{github.workspace}}/build

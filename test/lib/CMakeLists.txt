@@ -13,6 +13,7 @@
 #  limitations under the License.
 set(BINARY ${CMAKE_PROJECT_NAME}-tests)
 find_package(Threads)
+include(Catch)
 
 include_directories(.)
 include_directories(SYSTEM /usr/include/v8 ${CMAKE_SOURCE_DIR}/deps/quickjs)
@@ -21,7 +22,6 @@ file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.h *.cpp)
 set(SOURCES ${TEST_SOURCES})
 
 add_executable(${BINARY} ${TEST_SOURCES})
-add_test(NAME ${BINARY} COMMAND ${BINARY})
 
 target_link_libraries(${BINARY} PUBLIC
         Catch2::Catch2
@@ -30,5 +30,7 @@ target_link_libraries(${BINARY} PUBLIC
         ${CMAKE_PROJECT_NAME}core
         ${CMAKE_PROJECT_NAME}quickjs
         ${CMAKE_PROJECT_NAME}v8)
+
+catch_discover_tests(${BINARY})
 
 target_compile_definitions(${BINARY} PUBLIC TEST_RESOURCE_DIR="${CMAKE_SOURCE_DIR}/test/resources/")
