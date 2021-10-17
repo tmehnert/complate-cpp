@@ -12,6 +12,7 @@ env:
 
 jobs:
   build:
+    if: ${{ false }}  # disable because i want to try things out wuth macos
     name: ${{matrix.cc}}, ${{matrix.build_type}}
     runs-on: ubuntu-20.04
     strategy:
