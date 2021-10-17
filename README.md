@@ -75,7 +75,7 @@ make && make test
 * Trompeloeil, BSL-1.0 (fetched via CMake)
 * cpp-httplib, MIT License (fetched via CMake)
 * Node.js
-* CMake
+* CMake >= 3.14 required
 
 ## License
 complate-cpp is Open Source software released under the [Apache 2.0 license](LICENSE).
