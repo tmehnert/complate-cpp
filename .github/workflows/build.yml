@@ -17,12 +17,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_type: [Debug, Release]
         cc:
           - gcc-7
           - gcc-8
           - gcc-9
           - gcc-10
+        build_type: [Debug, Release]
         include:
           - cc: gcc-7
             cxx: g++-7
