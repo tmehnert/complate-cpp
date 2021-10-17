@@ -59,6 +59,7 @@ sudo ldconfig
 ### Compatibility
 The library is tested with following compilers.
 * GCC 7 - 10 (on Ubuntu 20.04)
+* Clang 7 - 12 (on Ubuntu 20.04)
 
 #### Running Tests
 Type following commands to run the unittests on your system.
