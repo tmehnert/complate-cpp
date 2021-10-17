@@ -103,6 +103,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install Dependencies
+        run: brew install v8
+
       - name: Configure CMake
         env:
           CC: ${{matrix.cc}}
