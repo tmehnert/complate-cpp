@@ -9,6 +9,7 @@ on:
 env:
   BUILD_TYPE: Release
   BUILD_TESTS: on
+  BUILD_EXAMPLE: on
 
 jobs:
   build:
@@ -21,7 +22,11 @@ jobs:
         run: sudo apt-get install -y libv8-dev
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_TESTS=${{env.BUILD_TESTS}}
+        run: |
+          cmake -B ${{github.workspace}}/build \
+            -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+            -DBUILD_TESTS=${{env.BUILD_TESTS}} \
+            -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}}
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
