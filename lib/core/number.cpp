@@ -174,11 +174,7 @@ optional<double> Number::optional() const {
     return (double)std::get<uint32_t>(m_data);
   }
 
-  if (holds<int64_t>()) {
-    return (double)std::get<int64_t>(m_data);
-  }
-
-  return nullopt;
+  return (double)std::get<int64_t>(m_data);
 }
 
 bool Number::operator==(const Number &other) const {
