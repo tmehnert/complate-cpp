@@ -2,6 +2,7 @@
 *- Rendering of JSX based views in C++*
 
 [![Build](https://github.com/tmehnert/complate-cpp/actions/workflows/build.yml/badge.svg)](https://github.com/tmehnert/complate-cpp/actions/workflows/build.yml)
+[![codecov](https://codecov.io/gh/tmehnert/complate-cpp/branch/main/graph/badge.svg)](https://codecov.io/gh/tmehnert/complate-cpp)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 [complate](https://complate.org) adapter that can be used in C++ 17 projects to

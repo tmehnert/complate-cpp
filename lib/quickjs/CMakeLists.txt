@@ -50,3 +50,5 @@ target_compile_definitions(${LIBRARY_NAME}
         PRIVATE
         CONFIG_VERSION="2021-03-27"
         )
+
+target_link_libraries(${LIBRARY_NAME} PUBLIC code_coverage)
