@@ -108,7 +108,7 @@ private:
   }
 
   static JSValue evaluateSource(JSContext *context, const string &source) {
-    QuickJsHelper::evaluateSource(context, source);
+    QuickJsHelper::evaluate(context, source);
     return QuickJsHelper::getFunction(context, "render");
   }
 };
