@@ -45,3 +45,6 @@ jobs:
           lcov --capture --directory lib --output-file coverage.info
           lcov --remove coverage.info '/usr/*' '*/deps/*' --output-file coverage.info
           lcov --list coverage.info
+
+      - name: Codecov
+        uses: codecov/codecov-action@v2.1.0
