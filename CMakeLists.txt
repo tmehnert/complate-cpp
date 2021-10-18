@@ -13,6 +13,7 @@
 #  limitations under the License.
 cmake_minimum_required(VERSION 3.14)
 project(complate VERSION 0.0.1 DESCRIPTION "C++ library to render JSX-Components into HTML")
+include(cmake/CodeCoverage.cmake)
 
 option(BUILD_TESTS "Build unit tests" OFF)
 option(BUILD_EXAMPLE "Build example" OFF)

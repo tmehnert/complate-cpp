@@ -35,3 +35,5 @@ install(TARGETS ${LIBRARY_NAME}
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib
         PUBLIC_HEADER DESTINATION include/complate/core)
+
+target_link_libraries(${LIBRARY_NAME} PUBLIC code_coverage)
