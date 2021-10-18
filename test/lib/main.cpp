@@ -13,11 +13,18 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#define CATCH_CONFIG_MAIN
+#define CATCH_CONFIG_RUNNER
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
 #include <complate/v8/v8platform.h>
 
 #include "catch2/catch.hpp"
 
-// NOLINTNEXTLINE
-static complate::V8Platform platform;
+using namespace complate;
+
+int main(int argc, char* argv[]) {
+  V8Platform platform;
+  /* See v8platform.test.cpp why this has to be set */
+  V8Platform::setFlags("--use-strict");
+
+  return Catch::Session().run(argc, argv);
+}
