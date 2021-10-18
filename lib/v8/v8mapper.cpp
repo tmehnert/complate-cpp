@@ -118,10 +118,8 @@ v8::Local<v8::Value> V8Mapper::valueFrom(const Number &number) {
     return v8::Integer::NewFromUnsigned(m_isolate, number.exactly<uint32_t>());
   } else if (number.holds<int64_t>()) {
     return v8::BigInt::New(m_isolate, number.exactly<int64_t>());
-  } else if (number.holds<double>()) {
-    return v8::Number::New(m_isolate, number.exactly<double>());
   } else {
-    return v8::Undefined(m_isolate);
+    return v8::Number::New(m_isolate, number.exactly<double>());
   }
 }
 
