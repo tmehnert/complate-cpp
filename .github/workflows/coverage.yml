@@ -42,8 +42,8 @@ jobs:
       - name: Coverage
         working-directory: ${{github.workspace}}/build
         run: |
-          lcov --capture --directory lib --output-file coverage.info
-          lcov --remove coverage.info '/usr/*' '*/deps/*' --output-file coverage.info
+          lcov --capture --directory . --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' '*/deps/*' '*/_deps/*' '*/test/*' --output-file coverage.info
           lcov --list coverage.info
 
       - name: Codecov
