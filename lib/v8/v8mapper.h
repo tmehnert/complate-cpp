@@ -49,6 +49,7 @@ private:
   inline v8::Local<v8::Value> valueFrom(const String &text);
 
   inline v8::Local<v8::String> newStringFrom(const char *str, size_t len);
+  inline v8::Local<v8::String> newInternalizedStringFrom(const std::string &str);
 
   static void proxy(const v8::FunctionCallbackInfo<v8::Value> &info);
 };

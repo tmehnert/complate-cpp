@@ -38,14 +38,8 @@ v8::Local<v8::Object> V8Mapper::fromObject(const Object &object,
                                            v8::Local<v8::Object> parent) {
   auto context = m_isolate->GetCurrentContext();
   for (const auto &[k, v] : object) {
-    parent
-        ->Set(context,
-              v8::String::NewFromUtf8(m_isolate, k.c_str(),
-                                      v8::NewStringType::kInternalized,
-                                      (int)k.size())
-                  .ToLocalChecked(),
-              fromValue(v))
-        .ToChecked();
+    v8::Local<v8::String> key = newInternalizedStringFrom(k);
+    parent->Set(context, key, fromValue(v)).ToChecked();
   }
   return parent;
 }
@@ -86,8 +80,8 @@ v8::Local<v8::Value> V8Mapper::fromValue(const Value &parameter) {
 }
 
 v8::Local<v8::Function> V8Mapper::fromFunction(const Function &d) {
-  return v8::FunctionTemplate::New(m_isolate, proxy,
-                                   v8::External::New(m_isolate, (void *)&d))
+  v8::Local<v8::External> fptr = v8::External::New(m_isolate, (void *)&d);
+  return v8::FunctionTemplate::New(m_isolate, proxy, fptr)
       ->GetFunction(m_isolate->GetCurrentContext())
       .ToLocalChecked();
 }
@@ -126,6 +120,14 @@ v8::Local<v8::Value> V8Mapper::valueFrom(const Number &number) {
 v8::Local<v8::String> V8Mapper::newStringFrom(const char *str, size_t len) {
   return v8::String::NewFromUtf8(m_isolate, str, v8::NewStringType::kNormal,
                                  (int)len)
+      .ToLocalChecked();
+}
+
+v8::Local<v8::String> V8Mapper::newInternalizedStringFrom(
+    const std::string &str) {
+  return v8::String::NewFromUtf8(m_isolate, str.c_str(),
+                                 v8::NewStringType::kInternalized,
+                                 (int)str.size())
       .ToLocalChecked();
 }
 
