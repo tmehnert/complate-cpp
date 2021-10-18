@@ -36,7 +36,13 @@ TEST_CASE("V8StreamAdapter", "[v8]") {
 
   auto stream = StreamMock();
   V8StreamAdapter streamAdapter(isolate);
-  const string source = R"(
+  string source =
+      "var testWriteLong = function(stream) {\n"
+      "  stream.write('" +
+      string(2048, '*') +
+      "');\n"
+      "}\n";
+  source += R"(
       var testWrite = function(stream) {
         stream.write('7 chars');
       }
@@ -66,6 +72,23 @@ TEST_CASE("V8StreamAdapter", "[v8]") {
     v8::Local<v8::Function> value =
         global
             ->Get(context, v8::String::NewFromUtf8(isolate, "testWrite",
+                                                   v8::NewStringType::kNormal)
+                               .ToLocalChecked())
+            .ToLocalChecked()
+            .As<v8::Function>();
+    v8::Local<v8::Value> args[1];
+    args[0] = streamAdapter.adapterFor(stream);
+    value->Call(context, global, 1, args).ToLocalChecked();
+  }
+
+  SECTION("forward write to stream (longpath)") {
+    const string expectedStr(2048, '*');
+    REQUIRE_CALL(stream, write(eq<const char *>(expectedStr), eq<int>(2048)))
+        .TIMES(1);
+
+    v8::Local<v8::Function> value =
+        global
+            ->Get(context, v8::String::NewFromUtf8(isolate, "testWriteLong",
                                                    v8::NewStringType::kNormal)
                                .ToLocalChecked())
             .ToLocalChecked()
