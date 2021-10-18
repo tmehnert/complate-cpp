@@ -19,6 +19,7 @@
 
 using namespace complate;
 using namespace std;
+using namespace std::literals;
 
 TEST_CASE("Value", "[core]") {
   SECTION("traits") {
@@ -50,15 +51,22 @@ TEST_CASE("Value", "[core]") {
       REQUIRE(v.is<Bool>());
       REQUIRE(v.optional<Bool>() == true);
       REQUIRE(v.holds<Bool>());
+      REQUIRE(v.get<Bool>() == true);
       REQUIRE(v.exactly<Bool>() == true);
+    }
+
+    SECTION("return empty optional when undefined") {
+      const Value undefined;
+      REQUIRE_FALSE(undefined.optional<bool>().has_value());
     }
   }
 
-  SECTION("Numver") {
+  SECTION("Number") {
     SECTION("from int32_t") {
       const Value v = (int32_t)-32;
       REQUIRE(v.holds<Number>());
       REQUIRE(v.is<int32_t>());
+      REQUIRE(v.get<int32_t>() == -32);
       REQUIRE(v.optional<int32_t>() == -32);
     }
 
@@ -66,6 +74,7 @@ TEST_CASE("Value", "[core]") {
       const Value v = (uint32_t)42;
       REQUIRE(v.holds<Number>());
       REQUIRE(v.is<uint32_t>());
+      REQUIRE(v.get<uint32_t>() == 42);
       REQUIRE(v.optional<uint32_t>() == 42);
     }
 
@@ -73,6 +82,7 @@ TEST_CASE("Value", "[core]") {
       const Value v = (int64_t)42;
       REQUIRE(v.holds<Number>());
       REQUIRE(v.is<int64_t>());
+      REQUIRE(v.get<int64_t>() == 42);
       REQUIRE(v.optional<int64_t>() == 42);
     }
 
@@ -80,7 +90,25 @@ TEST_CASE("Value", "[core]") {
       const Value v = (double)3.1415;
       REQUIRE(v.holds<Number>());
       REQUIRE(v.is<double>());
+      REQUIRE(v.get<double>() == 3.1415);
       REQUIRE(v.optional<double>() == 3.1415);
+    }
+
+    SECTION("from Number") {
+      const Value v = Number(123);
+      REQUIRE(v.holds<Number>());
+      REQUIRE(v.is<Number>());
+      REQUIRE(v.get<Number>() == 123);
+      REQUIRE(v.optional<Number>() == 123);
+    }
+
+    SECTION("return empty optional when undefined") {
+      const Value undefined;
+      REQUIRE_FALSE(undefined.optional<int32_t>().has_value());
+      REQUIRE_FALSE(undefined.optional<uint32_t>().has_value());
+      REQUIRE_FALSE(undefined.optional<int64_t>().has_value());
+      REQUIRE_FALSE(undefined.optional<double>().has_value());
+      REQUIRE_FALSE(undefined.optional<Number>().has_value());
     }
   }
 
@@ -88,6 +116,7 @@ TEST_CASE("Value", "[core]") {
     SECTION("is String") {
       const Value v = String("Hello World!");
       REQUIRE(v.is<String>());
+      REQUIRE(v.get<String>() == "Hello World!");
       REQUIRE(v.optional<String>().value() == "Hello World!");
       REQUIRE(v.holds<String>());
       REQUIRE(v.exactly<String>() == "Hello World!");
@@ -96,19 +125,35 @@ TEST_CASE("Value", "[core]") {
     SECTION("from string") {
       const Value v = (string) "Hello World!";
       REQUIRE(v.is<string>());
+      REQUIRE(v.get<string>() == "Hello World!");
       REQUIRE(v.optional<string>().value() == "Hello World!");
     }
 
     SECTION("from string_view") {
       const Value v = (string_view) "Hello World!";
       REQUIRE(v.is<string_view>());
+      REQUIRE(v.get<string_view>() == "Hello World!");
       REQUIRE(v.optional<string_view>().value() == "Hello World!");
     }
 
     SECTION("from const char *") {
       const Value v = (const char *)"Hello World!";
-      REQUIRE(v.is<string_view>());
+      REQUIRE(v.is<string>());
+      REQUIRE(v.get<string>() == "Hello World!");
       REQUIRE(v.optional<string_view>().value() == "Hello World!");
+    }
+
+    SECTION("from const char * (nullptr)") {
+      const Value v = (const char *)nullptr;
+      REQUIRE(v.is<Null>());
+      REQUIRE(v.holds<Null>());
+    }
+
+    SECTION("return empty optional when undefined") {
+      const Value undefined;
+      REQUIRE_FALSE(undefined.optional<string>().has_value());
+      REQUIRE_FALSE(undefined.optional<string_view>().has_value());
+      REQUIRE_FALSE(undefined.optional<String>().has_value());
     }
   }
 
@@ -116,7 +161,13 @@ TEST_CASE("Value", "[core]") {
     SECTION("is Array") {
       const Value v = Array{1, 2, 3};
       REQUIRE(v.is<Array>());
+      REQUIRE(v.get<Array>() == Array{1, 2, 3});
       REQUIRE(v.holds<Array>());
+    }
+
+    SECTION("return empty optional when undefined") {
+      const Value undefined;
+      REQUIRE_FALSE(undefined.optional<Array>().has_value());
     }
   }
 
@@ -124,14 +175,21 @@ TEST_CASE("Value", "[core]") {
     SECTION("is Object") {
       const Value v = Object{{"name", "john"}};
       REQUIRE(v.is<Object>());
+      REQUIRE(v.get<Object>() == Object{{"name", "john"}});
       REQUIRE(v.holds<Object>());
+    }
+
+    SECTION("return empty optional when undefined") {
+      const Value undefined;
+      REQUIRE_FALSE(undefined.optional<Object>().has_value());
     }
   }
 
   SECTION("Function") {
     SECTION("is Function") {
-      const Value v = Function{[] { return Value(); }};
+      const Value v = Function{[] { return 23; }};
       REQUIRE(v.is<Function>());
+      REQUIRE(v.get<Function>().apply({}) == 23);
       REQUIRE(v.holds<Function>());
     }
 
@@ -151,9 +209,43 @@ TEST_CASE("Value", "[core]") {
       const Value result = v.optional<Function>().value().apply(args);
       REQUIRE(result.optional<int32_t>().value() == 42);
     }
+
+    SECTION("return empty optional when undefined") {
+      const Value undefined;
+      REQUIRE_FALSE(undefined.optional<Function>().has_value());
+    }
   }
 
-  SECTION("optional<T>") {
+  SECTION("Proxy") {
+    SECTION("is Proxy") {
+      const Value v = Proxy("std::string", make_shared<string>("foo"));
+      REQUIRE(v.is<Proxy>());
+      REQUIRE(v.get<Proxy>().name() == "std::string");
+      REQUIRE(v.holds<Proxy>());
+    }
+
+    SECTION("return empty optional when undefined") {
+      const Value undefined;
+      REQUIRE_FALSE(undefined.optional<Proxy>().has_value());
+    }
+  }
+
+  SECTION("ProxyWeak") {
+    SECTION("is ProxyWeak") {
+      string foo = "foo";
+      const Value v = ProxyWeak("std::string", &foo);
+      REQUIRE(v.is<ProxyWeak>());
+      REQUIRE(v.get<ProxyWeak>().name() == "std::string");
+      REQUIRE(v.holds<ProxyWeak>());
+    }
+
+    SECTION("return empty optional when undefined") {
+      const Value undefined;
+      REQUIRE_FALSE(undefined.optional<ProxyWeak>().has_value());
+    }
+  }
+
+  SECTION("constructed with optional<T>") {
     SECTION("is undefined, when optional is empty") {
       optional<string> opt;
       const Value v = opt;
@@ -264,9 +356,8 @@ TEST_CASE("Value", "[core]") {
 
   SECTION("operator == and !=") {
     SECTION("check equality regardless of type") {
-      const auto a =
-          Object{{"name", string_view("Klaus")}, {"age", (int32_t)34}};
-      const auto b = Object{{"name", string("Klaus")}, {"age", (uint32_t)34}};
+      const Value a = Object{{"name", "Klaus"sv}, {"age", (int32_t)34}};
+      const Value b = Object{{"name", string("Klaus")}, {"age", (uint32_t)34}};
       REQUIRE(a == b);
       REQUIRE_FALSE(a != b);
     }
