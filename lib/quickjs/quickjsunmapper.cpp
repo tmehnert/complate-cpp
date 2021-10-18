@@ -37,10 +37,6 @@ Value QuickJsUnmapper::fromValue(JSValue value) {
       int64_t v;
       JS_ToInt64(m_context, &v, value);
       return v;
-    } else if (tag == JS_TAG_BIG_INT) {
-      int64_t v;
-      JS_ToBigInt64(m_context, &v, value);
-      return v;
     }
   } else if (JS_IsBool(value)) {
     return JS_ToBool(m_context, value) != 0;
