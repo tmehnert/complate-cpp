@@ -23,7 +23,7 @@
 
 class QuickJsHelper {
 public:
-  static void evaluateSource(JSContext *context, const std::string &source);
+  static void evaluate(JSContext *context, const std::string &source);
 
   static JSValue getFunction(JSContext *context, const std::string &name);
 };

@@ -114,6 +114,11 @@ TEST_CASE("V8Mapper", "[v8]") {
   }
 
   SECTION("fromValue") {
+    SECTION("convert undefined") {
+      v8::Local<v8::Value> value = mapper.fromValue(Value());
+      REQUIRE(value->IsUndefined());
+    }
+
     SECTION("convert null") {
       v8::Local<v8::Value> value = mapper.fromValue(Null());
       REQUIRE(value->IsNull());
@@ -191,9 +196,36 @@ TEST_CASE("V8Mapper", "[v8]") {
       REQUIRE(obj->Get(context, v8String("b")).ToLocalChecked()->IsString());
     }
 
+    SECTION("convert Function") {
+      Value f = Function{[](const Array &args) { return args.at(1); }};
+      v8::Local<v8::Value> value = mapper.fromValue(f);
+      REQUIRE(value->IsFunction());
+      v8::Function *fn = v8::Function::Cast(*value);
+      v8::Local<v8::Value> args[2];
+      args[0] = mapper.fromValue(1);
+      args[1] = mapper.fromValue(2);
+      v8::Local<v8::Value> res =
+          fn->Call(context, context->Global(), 2, args).ToLocalChecked();
+      REQUIRE(res->IsInt32());
+      REQUIRE(res->ToInt32(context).ToLocalChecked()->Value() == 2);
+    }
+
     SECTION("convert Proxy") {
       v8::Local<v8::Value> value =
           mapper.fromValue(Proxy{"std::string", make_shared<string>()});
+      REQUIRE(value->IsObject());
+      auto object = value->ToObject(context).ToLocalChecked();
+      auto method = object->Get(
+          context,
+          v8::String::NewFromUtf8(isolate, "clear", v8::NewStringType::kNormal)
+              .ToLocalChecked());
+      REQUIRE(method.ToLocalChecked()->IsFunction());
+    }
+
+    SECTION("convert ProxyWeak") {
+      string foo = "foo";
+      v8::Local<v8::Value> value =
+          mapper.fromValue(ProxyWeak{"std::string", &foo});
       REQUIRE(value->IsObject());
       auto object = value->ToObject(context).ToLocalChecked();
       auto method = object->Get(

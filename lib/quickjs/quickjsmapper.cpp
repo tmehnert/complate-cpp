@@ -100,10 +100,8 @@ JSValue QuickJsMapper::valueFrom(const Number &number) {
     return JS_NewUint32(m_context, number.exactly<uint32_t>());
   } else if (number.holds<int64_t>()) {
     return JS_NewInt64(m_context, number.exactly<int64_t>());
-  } else if (number.holds<double>()) {
-    return JS_NewFloat64(m_context, number.exactly<double>());
   } else {
-    return JS_UNDEFINED;
+    return JS_NewFloat64(m_context, number.exactly<double>());
   }
 }
 

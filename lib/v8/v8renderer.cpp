@@ -19,6 +19,7 @@
 
 #include <utility>
 
+#include "v8helper.h"
 #include "v8mapper.h"
 #include "v8streamadapter.h"
 
@@ -42,10 +43,7 @@ public:
 
     m_mapper.fromObject(m_bindings, ctx->Global());
 
-    v8::Local<v8::String> src =
-        v8::String::NewFromUtf8(m_isolate, source.c_str(),
-                                v8::NewStringType::kNormal)
-            .ToLocalChecked();
+    v8::Local<v8::String> src = V8Helper::newString(m_isolate, source);
     v8::TryCatch tryCatch(m_isolate);
     v8::MaybeLocal<v8::Script> script = v8::Script::Compile(ctx, src);
     if (tryCatch.HasCaught()) {
@@ -60,12 +58,8 @@ public:
     }
 
     v8::Local<v8::Object> global = ctx->Global();
-    v8::Local<v8::Value> value =
-        global
-            ->Get(ctx, v8::String::NewFromUtf8(m_isolate, "render",
-                                               v8::NewStringType::kNormal)
-                           .ToLocalChecked())
-            .ToLocalChecked();
+    v8::Local<v8::String> rnd = V8Helper::newString(m_isolate, "render");
+    v8::Local<v8::Value> value = global->Get(ctx, rnd).ToLocalChecked();
     if (!value->IsFunction()) {
       throw Exception("ReferenceError: 'render' is not defined");
     }
@@ -90,10 +84,7 @@ public:
     v8::Context::Scope context_scope(ctx);
 
     v8::Local<v8::Value> p;
-    if (!v8::JSON::Parse(ctx,
-                         v8::String::NewFromUtf8(m_isolate, parameters.c_str(),
-                                                 v8::NewStringType::kNormal)
-                             .ToLocalChecked())
+    if (!v8::JSON::Parse(ctx, V8Helper::newString(m_isolate, parameters))
              .ToLocal(&p)) {
       throw Exception("SyntaxError: 'parameters' is not an object");
     }
@@ -123,9 +114,7 @@ private:
     auto ctx = context();
 
     v8::Local<v8::Value> args[3];
-    args[0] = v8::String::NewFromUtf8(m_isolate, view.c_str(),
-                                      v8::NewStringType::kNormal)
-                  .ToLocalChecked();
+    args[0] = V8Helper::newString(m_isolate, view);
     args[1] = parameters;
     args[2] = m_streamAdapter.adapterFor(stream);
 

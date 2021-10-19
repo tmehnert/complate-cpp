@@ -20,11 +20,15 @@
 using namespace complate;
 using namespace std;
 
-void QuickJsHelper::evaluateSource(JSContext *context, const string &source) {
+void QuickJsHelper::evaluate(JSContext *context, const string &source) {
   JSValue rc = JS_Eval(context, source.c_str(), source.size(), "<source>",
                        JS_EVAL_TYPE_GLOBAL);
   if (JS_IsException(rc)) {
-    throw Exception(JS_ToCString(context, JS_GetException(context)));
+    JS_FreeValue(context, rc);
+    JSValue exc = JS_GetException(context);
+    const char *str = JS_ToCString(context, exc);
+    JS_FreeValue(context, exc);
+    throw Exception(str);
   }
   JS_FreeValue(context, rc);
 }

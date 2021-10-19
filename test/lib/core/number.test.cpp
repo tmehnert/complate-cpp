@@ -31,12 +31,14 @@ TEST_CASE("Number", "[core]") {
   SECTION("construct default") {
     const Number number;
     SECTION("holds int32_t") { REQUIRE(number.holds<int32_t>()); }
+    SECTION("exactly int32_t zero") { REQUIRE(number.exactly<int32_t>() == 0); }
     SECTION("has value zero") { REQUIRE(number == 0); }
   }
 
   SECTION("construct with int32_t") {
     const Number number = (int32_t)3;
     SECTION("holds int32_t") { REQUIRE(number.holds<int32_t>()); }
+    SECTION("exactly int32_t 3") { REQUIRE(number.exactly<int32_t>() == 3); }
     SECTION("can compared with") {
       SECTION("Number") {
         REQUIRE(number == Number(3));
@@ -90,6 +92,7 @@ TEST_CASE("Number", "[core]") {
   SECTION("construct with uint32_t") {
     const Number number = (uint32_t)3;
     SECTION("holds uint32_t") { REQUIRE(number.holds<uint32_t>()); }
+    SECTION("exactly uint32_t 3") { REQUIRE(number.exactly<uint32_t>() == 3); }
     SECTION("can compared with") {
       SECTION("Number") {
         REQUIRE(number == Number(3));
@@ -143,6 +146,7 @@ TEST_CASE("Number", "[core]") {
   SECTION("construct with int64_t") {
     const Number number = (int64_t)3;
     SECTION("holds int64_t") { REQUIRE(number.holds<int64_t>()); }
+    SECTION("exactly int64_t 3") { REQUIRE(number.exactly<int64_t>() == 3); }
     SECTION("can compared with") {
       SECTION("Number") {
         REQUIRE(number == Number(3));
@@ -208,6 +212,9 @@ TEST_CASE("Number", "[core]") {
   SECTION("construct with double") {
     const Number number = (double)3.1415;
     SECTION("holds double") { REQUIRE(number.holds<double>()); }
+    SECTION("exactly double 3.1415") {
+      REQUIRE(number.exactly<double>() == 3.1415);
+    }
     SECTION("can compared with") {
       SECTION("Number") {
         REQUIRE(number == Number(3.1415));

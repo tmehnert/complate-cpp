@@ -13,18 +13,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#define CATCH_CONFIG_RUNNER
-#define CATCH_CONFIG_ENABLE_BENCHMARKING
-#include <complate/v8/v8platform.h>
+#pragma once
 
-#include "catch2/catch.hpp"
+#include <v8/v8.h>
 
-using namespace complate;
+#include <string_view>
 
-int main(int argc, char* argv[]) {
-  V8Platform platform;
-  /* See v8platform.test.cpp why this has to be set */
-  V8Platform::setFlags("--use-strict");
-
-  return Catch::Session().run(argc, argv);
-}
+class V8Helper {
+public:
+  static v8::Local<v8::String> newString(v8::Isolate* isolate,
+                                         std::string_view str);
+};

@@ -31,7 +31,7 @@ TEST_CASE("QuickJsStreamAdapter", "[quickjs]") {
 
   auto stream = StreamMock();
   QuickJsStreamAdapter streamAdapter(context);
-  QuickJsHelper::evaluateSource(context, R"(
+  QuickJsHelper::evaluate(context, R"(
       var testWrite = function(stream) {
         stream.write('7 chars');
       }

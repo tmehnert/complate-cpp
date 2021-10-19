@@ -14,15 +14,30 @@
  *  limitations under the License.
  */
 #include <complate/v8/v8platform.h>
+#include <complate/v8/v8renderer.h>
+#include <v8-version-string.h>
 
 #include "catch2/catch.hpp"
+#include "resources.h"
 
+using namespace Catch::Matchers;
 using namespace complate;
 using namespace std;
 
 TEST_CASE("V8Platform", "[v8]") {
   SECTION("version return something") {
-    const string_view version = V8Platform::version();
-    REQUIRE(!version.empty());
+    const auto version = string(V8Platform::version());
+    REQUIRE_THAT(version, StartsWith(V8_VERSION_STRING));
+  }
+
+  SECTION("setFlags respected by the engine") {
+    /*
+     * Without V8Platform::setFlags("--use-strict") the engine would allow
+     * sloppy JavaScript. With this flag enabled the engine raises this error.
+     */
+    const string sloppy = Resources::read("views.sloppy.js");
+    REQUIRE_THROWS_AS(V8Renderer(sloppy), complate::Exception);
+    REQUIRE_THROWS_WITH(V8Renderer(sloppy),
+                        Contains("ReferenceError") && Contains("sloppy"));
   }
 }
