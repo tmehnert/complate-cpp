@@ -17,6 +17,8 @@
 
 #include <v8/v8.h>
 
+#include <string_view>
+
 class V8Helper {
 public:
   static v8::Local<v8::String> newString(v8::Isolate* isolate,
