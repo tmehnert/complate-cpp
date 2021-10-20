@@ -16,7 +16,6 @@ set(LIBRARY_NAME complatev8)
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 set(SOURCES ${SOURCES})
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(SYSTEM /usr/include/v8)
 file(GLOB_RECURSE LIBRARY_INCLUDE_FILES "${CMAKE_SOURCE_DIR}/include/complate/v8/*.h")
 
@@ -28,6 +27,9 @@ else ()
     target_link_libraries(${LIBRARY_NAME} PUBLIC -lv8 complatecore)
 endif ()
 
+target_include_directories(${LIBRARY_NAME}
+    PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    )
 target_link_libraries(${LIBRARY_NAME}
     PRIVATE "$<BUILD_INTERFACE:code_coverage>"
     )

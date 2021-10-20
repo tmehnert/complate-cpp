@@ -16,7 +16,6 @@ set(LIBRARY_NAME complatecore)
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 set(SOURCES ${SOURCES})
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
 file(GLOB_RECURSE LIBRARY_INCLUDE_FILES "${CMAKE_SOURCE_DIR}/include/complate/core/*.h")
 
 if (BUILD_SHARED)
@@ -25,6 +24,9 @@ else ()
     add_library(${LIBRARY_NAME} STATIC ${SOURCES})
 endif ()
 
+target_include_directories(${LIBRARY_NAME}
+    PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    )
 target_link_libraries(${LIBRARY_NAME}
     PRIVATE "$<BUILD_INTERFACE:code_coverage>"
     )

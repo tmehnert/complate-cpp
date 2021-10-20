@@ -23,7 +23,6 @@ set(SOURCES ${SOURCES}
     ${QUICKJS_SRC_DIR}/cutils.c
     )
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(SYSTEM ${QUICKJS_SRC_DIR})
 
 file(GLOB_RECURSE LIBRARY_INCLUDE_FILES "${CMAKE_SOURCE_DIR}/include/complate/quickjs/*.h")
@@ -35,6 +34,9 @@ else ()
     target_link_libraries(${LIBRARY_NAME} PUBLIC complatecore)
 endif ()
 
+target_include_directories(${LIBRARY_NAME}
+    PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    )
 target_link_libraries(${LIBRARY_NAME}
     PRIVATE "$<BUILD_INTERFACE:code_coverage>"
     )

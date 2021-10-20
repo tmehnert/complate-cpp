@@ -38,8 +38,6 @@ if (USE_SANITIZER)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SANITIZER}")
 endif ()
 
-include_directories(include)
-
 set(TARGETS_EXPORT_NAME "${CMAKE_PROJECT_NAME}-targets")
 add_subdirectory(lib/core)
 add_subdirectory(lib/quickjs)
