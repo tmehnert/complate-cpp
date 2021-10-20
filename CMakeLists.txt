@@ -40,9 +40,11 @@ endif ()
 
 include_directories(include)
 
+set(TARGETS_EXPORT_NAME "${CMAKE_PROJECT_NAME}-targets")
 add_subdirectory(lib/core)
 add_subdirectory(lib/quickjs)
 add_subdirectory(lib/v8)
+include(cmake/ExportTargets.cmake)
 
 if (BUILD_EXAMPLE)
     include(cmake/CppHttplib.cmake)
