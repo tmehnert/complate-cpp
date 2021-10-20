@@ -26,7 +26,7 @@ else ()
 endif ()
 
 target_link_libraries(${LIBRARY_NAME}
-    PUBLIC code_coverage
+    PRIVATE "$<BUILD_INTERFACE:code_coverage>"
     )
 set_target_properties(${LIBRARY_NAME} PROPERTIES
     VERSION ${PROJECT_VERSION}

@@ -36,7 +36,7 @@ else ()
 endif ()
 
 target_link_libraries(${LIBRARY_NAME}
-    PUBLIC code_coverage
+    PRIVATE "$<BUILD_INTERFACE:code_coverage>"
     )
 target_compile_definitions(${LIBRARY_NAME}
     PRIVATE CONFIG_VERSION="2021-03-27"
