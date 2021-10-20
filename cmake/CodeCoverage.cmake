@@ -16,6 +16,6 @@ option(CODE_COVERAGE "Enable code coverage" OFF)
 add_library(code_coverage INTERFACE)
 
 if (CODE_COVERAGE)
-    target_compile_options(code_coverage INTERFACE -O0  -g --coverage)
+    target_compile_options(code_coverage INTERFACE -O0 -g --coverage)
     target_link_options(code_coverage INTERFACE --coverage)
-endif()
+endif ()

@@ -24,13 +24,15 @@ set(SOURCES ${TEST_SOURCES})
 add_executable(${BINARY} ${TEST_SOURCES})
 
 target_link_libraries(${BINARY} PUBLIC
-        Catch2::Catch2
-        trompeloeil
-        ${CMAKE_THREAD_LIBS_INIT}
-        ${CMAKE_PROJECT_NAME}core
-        ${CMAKE_PROJECT_NAME}quickjs
-        ${CMAKE_PROJECT_NAME}v8)
+    Catch2::Catch2
+    trompeloeil
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_PROJECT_NAME}core
+    ${CMAKE_PROJECT_NAME}quickjs
+    ${CMAKE_PROJECT_NAME}v8
+    )
+target_compile_definitions(${BINARY}
+    PUBLIC TEST_RESOURCE_DIR="${CMAKE_SOURCE_DIR}/test/resources/"
+    )
 
 catch_discover_tests(${BINARY})
-
-target_compile_definitions(${BINARY} PUBLIC TEST_RESOURCE_DIR="${CMAKE_SOURCE_DIR}/test/resources/")

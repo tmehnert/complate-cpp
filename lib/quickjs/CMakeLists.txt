@@ -16,12 +16,12 @@ set(LIBRARY_NAME complatequickjs)
 set(QUICKJS_SRC_DIR ${CMAKE_SOURCE_DIR}/deps/quickjs)
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 set(SOURCES ${SOURCES}
-        ${QUICKJS_SRC_DIR}/quickjs.h
-        ${QUICKJS_SRC_DIR}/quickjs.c
-        ${QUICKJS_SRC_DIR}/libregexp.c
-        ${QUICKJS_SRC_DIR}/libunicode.c
-        ${QUICKJS_SRC_DIR}/cutils.c
-        )
+    ${QUICKJS_SRC_DIR}/quickjs.h
+    ${QUICKJS_SRC_DIR}/quickjs.c
+    ${QUICKJS_SRC_DIR}/libregexp.c
+    ${QUICKJS_SRC_DIR}/libunicode.c
+    ${QUICKJS_SRC_DIR}/cutils.c
+    )
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(SYSTEM ${QUICKJS_SRC_DIR})
@@ -35,20 +35,22 @@ else ()
     target_link_libraries(${LIBRARY_NAME} PUBLIC complatecore)
 endif ()
 
+target_link_libraries(${LIBRARY_NAME}
+    PUBLIC code_coverage
+    )
+target_compile_definitions(${LIBRARY_NAME}
+    PRIVATE CONFIG_VERSION="2021-03-27"
+    )
 set_target_properties(${LIBRARY_NAME} PROPERTIES
-        VERSION ${PROJECT_VERSION}
-        SOVERSION ${PROJECT_VERSION_MAJOR}
-        PUBLIC_HEADER "${LIBRARY_INCLUDE_FILES}")
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    PUBLIC_HEADER "${LIBRARY_INCLUDE_FILES}"
+    )
 
 install(TARGETS ${LIBRARY_NAME}
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        PUBLIC_HEADER DESTINATION include/complate/quickjs)
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    PUBLIC_HEADER DESTINATION include/complate/quickjs
+)
 
-target_compile_definitions(${LIBRARY_NAME}
-        PRIVATE
-        CONFIG_VERSION="2021-03-27"
-        )
-
-target_link_libraries(${LIBRARY_NAME} PUBLIC code_coverage)

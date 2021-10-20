@@ -28,15 +28,19 @@ else ()
     target_link_libraries(${LIBRARY_NAME} PUBLIC -lv8 complatecore)
 endif ()
 
+target_link_libraries(${LIBRARY_NAME}
+    PUBLIC code_coverage
+    )
 set_target_properties(${LIBRARY_NAME} PROPERTIES
-        VERSION ${PROJECT_VERSION}
-        SOVERSION ${PROJECT_VERSION_MAJOR}
-        PUBLIC_HEADER "${LIBRARY_INCLUDE_FILES}")
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    PUBLIC_HEADER "${LIBRARY_INCLUDE_FILES}"
+    )
 
 install(TARGETS ${LIBRARY_NAME}
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        PUBLIC_HEADER DESTINATION include/complate/v8)
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    PUBLIC_HEADER DESTINATION include/complate/v8
+    )
 
-target_link_libraries(${LIBRARY_NAME} PUBLIC code_coverage)
