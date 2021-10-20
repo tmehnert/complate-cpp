@@ -30,6 +30,7 @@ target_link_libraries(${BINARY} PUBLIC
     ${CMAKE_PROJECT_NAME}core
     ${CMAKE_PROJECT_NAME}quickjs
     ${CMAKE_PROJECT_NAME}v8
+    PRIVATE "$<BUILD_INTERFACE:code_coverage>"
     )
 target_compile_definitions(${BINARY}
     PUBLIC TEST_RESOURCE_DIR="${CMAKE_SOURCE_DIR}/test/resources/"
