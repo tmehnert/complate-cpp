@@ -13,7 +13,7 @@
 #  limitations under the License.
 set(LIBRARY_NAME complatequickjs)
 
-set(QUICKJS_SRC_DIR ${CMAKE_SOURCE_DIR}/deps/quickjs)
+set(QUICKJS_SRC_DIR ${PROJECT_SOURCE_DIR}/deps/quickjs)
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 set(SOURCES ${SOURCES}
     ${QUICKJS_SRC_DIR}/quickjs.h
