@@ -1,0 +1,33 @@
+name: Installer
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  cmake-fetchcontent:
+    name: "CMake FetchContent"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: sudo apt-get install -y libv8-dev
+
+      - name: Configure CMake
+        run: |
+          cmake -B ${{github.workspace}}/build \
+            -DCOMPLATE_GIT_TAG=${{github.sha}} \
+            test/installer/cmake-fetchcontent
+
+      - name: Build
+        env:
+          CMAKE_BUILD_PARALLEL_LEVEL: 2
+        run: |
+          cmake --build ${{github.workspace}}/build
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C --output-on-failure
