@@ -41,51 +41,53 @@ public:
   /**
   * Pass the content of your views.js bundle.
   *
-  * @param source The complate JavaScript source bundle with the views.
+  * @param sourceObj The complate JavaScript source bundle with the views.
   * @return Reference to this builder.
-   */
-  V8RendererBuilder &withSource(std::string source);
+  */
+  V8RendererBuilder &source(std::string sourceObj);
 
   /**
   * Pass a function that return the content of your views.js bundle.
   *
-  * @param sourceCreator A function that return your  complate JavaScript
+  * @param sourceCreator A function that return your complate JavaScript
   * source bundle with the views.
   * @return Reference to this builder.
-   */
-  V8RendererBuilder &withSource(SourceCreator sourceCreator);
+  */
+  V8RendererBuilder &source(SourceCreator sourceCreator);
 
   /**
   * Pass your bindings.
   *
-  * @param bindings Global variables available in every view.
+  * @param bindingsObj Global variables which are available in every view.
   * @return Reference to this builder.
-   */
-  V8RendererBuilder &withBindings(Object bindings);
+  */
+  V8RendererBuilder &bindings(Object bindingsObj);
 
   /**
   * Pass a function that return your bindings.
   *
-  * @param bindings Global variables available in every view.
+  * @param bindingsCreator A function that return your Global variables
+  * which are available in every view.
   * @return Reference to this builder.
-   */
-  V8RendererBuilder &withBindings(BindingsCreator bindingsCretor);
+  */
+  V8RendererBuilder &bindings(BindingsCreator bindingsCreator);
 
   /**
-  * Pass your Prototypes.
+  * Pass your prototypes.
   *
-  * @param prototypes Prototypes for C++ classes to be supported via Proxy.
+  * @param prototypeList Prototypes for C++ classes to be supported via Proxy.
   * @return Reference to this builder.
-   */
-  V8RendererBuilder &withPrototypes(std::vector<Prototype> prototypes);
+  */
+  V8RendererBuilder &prototypes(std::vector<Prototype> prototypeList);
 
   /**
-  * Pass a function that return your Prototypes.
+  * Pass a function that return your prototypes.
   *
-  * @param prototypes Prototypes for C++ classes to be supported via Proxy.
+  * @param prototypesCreator A function that return Prototypes for C++ classes
+  * to be supported via Proxy.
   * @return Reference to this builder.
-   */
-  V8RendererBuilder &withPrototypes(PrototypesCreator prototypesCreator);
+  */
+  V8RendererBuilder &prototypes(PrototypesCreator prototypesCreator);
 
   /** Build a renderer */
   [[nodiscard]] V8Renderer build() const;

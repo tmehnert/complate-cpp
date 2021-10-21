@@ -20,32 +20,32 @@ using namespace complate;
 
 class V8RendererBuilder::Impl {
 public:
- void withSource(string source) {
-   m_source = move(source);
+ void source(string sourceObj) {
+   m_source = move(sourceObj);
    m_sourceCreator = {};
  }
 
- void withSource(SourceCreator sourceCreator) {
+ void source(SourceCreator sourceCreator) {
    m_source = {};
    m_sourceCreator = move(sourceCreator);
  }
 
- void withBindings(Object bindings) {
-   m_bindings = move(bindings);
+ void bindings(Object bindingsObj) {
+   m_bindings = move(bindingsObj);
    m_bindingsCreator = {};
  }
 
- void withBindings(BindingsCreator bindingsCreator) {
+ void bindings(BindingsCreator bindingsCreator) {
    m_bindings = {};
    m_bindingsCreator = move(bindingsCreator);
  }
 
- void withPrototypes(vector<Prototype> prototypes) {
-   m_prototypes = move(prototypes);
+ void prototypes(vector<Prototype> prototypeList) {
+   m_prototypes = move(prototypeList);
    m_prototypesCreator = {};
  }
 
- void withPrototypes(PrototypesCreator prototypesCreator) {
+ void prototypes(PrototypesCreator prototypesCreator) {
    m_prototypes = vector<Prototype>();
    m_prototypesCreator = move(prototypesCreator);
  }
@@ -79,37 +79,37 @@ V8RendererBuilder::V8RendererBuilder()
 
 V8RendererBuilder::~V8RendererBuilder() = default;
 
-V8RendererBuilder &V8RendererBuilder::withSource(string source) {
- m_impl->withSource(move(source));
+V8RendererBuilder &V8RendererBuilder::source(string sourceObj) {
+  m_impl->source(move(sourceObj));
  return *this;
 }
 
-V8RendererBuilder &V8RendererBuilder::withSource(
+V8RendererBuilder &V8RendererBuilder::source(
    V8RendererBuilder::SourceCreator sourceCreator) {
- m_impl->withSource(move(sourceCreator));
+  m_impl->source(move(sourceCreator));
  return *this;
 }
 
-V8RendererBuilder &V8RendererBuilder::withBindings(Object bindings) {
- m_impl->withBindings(move(bindings));
+V8RendererBuilder &V8RendererBuilder::bindings(Object bindingsObj) {
+  m_impl->bindings(move(bindingsObj));
  return *this;
 }
 
-V8RendererBuilder &V8RendererBuilder::withBindings(
-   V8RendererBuilder::BindingsCreator bindings) {
- m_impl->withBindings(move(bindings));
+V8RendererBuilder &V8RendererBuilder::bindings(
+   V8RendererBuilder::BindingsCreator bindingsCreator) {
+  m_impl->bindings(move(bindingsCreator));
  return *this;
 }
 
-V8RendererBuilder &V8RendererBuilder::withPrototypes(
-   std::vector<Prototype> prototypes) {
- m_impl->withPrototypes(move(prototypes));
+V8RendererBuilder &V8RendererBuilder::prototypes(
+   std::vector<Prototype> prototypeList) {
+  m_impl->prototypes(move(prototypeList));
  return *this;
 }
 
-V8RendererBuilder &V8RendererBuilder::withPrototypes(
+V8RendererBuilder &V8RendererBuilder::prototypes(
    V8RendererBuilder::PrototypesCreator prototypesCreator) {
- m_impl->withPrototypes(move(prototypesCreator));
+  m_impl->prototypes(move(prototypesCreator));
  return *this;
 }
 
