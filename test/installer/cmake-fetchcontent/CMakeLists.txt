@@ -21,14 +21,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 enable_testing()
 
 message("-- Fetching complate...")
-if (NOT COMPLATE_GIT_TAG)
-    set(COMPLATE_GIT_TAG HEAD)
-endif ()
 FetchContent_Declare(
     complate
-    GIT_REPOSITORY https://github.com/tmehnert/complate-cpp.git
-    GIT_TAG ${COMPLATE_GIT_TAG}
-    GIT_SHALLOW 1
+    SOURCE_DIR ${PROJECT_SOURCE_DIR}/../../..
 )
 
 FetchContent_MakeAvailable(complate)
