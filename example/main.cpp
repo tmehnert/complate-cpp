@@ -59,6 +59,6 @@ int main() {
   });
 
   cout << "Starting server at http://localhost:8080" << endl;
-  server.listen("0.0.0.0", 8080);
+  server.listen("127.0.0.1", 8080);
   return EXIT_SUCCESS;
 }
