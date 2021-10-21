@@ -41,7 +41,7 @@ int main() {
    */
   // clang-format-off
   auto renderer = ReEvaluatingRenderer(QuickJsRendererBuilder()
-      .withSource(getViews)
+      .source(getViews)
       .creator()
   );
   // clang-format on

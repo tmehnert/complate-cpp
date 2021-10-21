@@ -37,7 +37,7 @@ int main() {
   v8Renderer.render("Works with V8Renderer", parameters, stream);
 
   QuickJsRenderer quickJsRenderer = QuickJsRendererBuilder()
-      .withSource(VIEWS)
+      .source(VIEWS)
       .build();
   quickJsRenderer.render("Works with QuickJsRenderer", parameters, stream);
   // clang-format: on

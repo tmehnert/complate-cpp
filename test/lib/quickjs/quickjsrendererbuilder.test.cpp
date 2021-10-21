@@ -31,9 +31,9 @@ TEST_CASE("QuickJsRendererBuilder", "[quickjs]") {
   SECTION("build with values") {
 
     auto renderer = QuickJsRendererBuilder()
-        .withSource(Resources::read("views.js"))
-        .withPrototypes(Testdata::prototypes())
-        .withBindings(Testdata::bindings())
+        .source(Resources::read("views.js"))
+        .prototypes(Testdata::prototypes())
+        .bindings(Testdata::bindings())
         .build();
 
     renderer.render("TodoList", Testdata::forTodoList(), stream);
@@ -42,9 +42,9 @@ TEST_CASE("QuickJsRendererBuilder", "[quickjs]") {
 
   SECTION("build with creators") {
     auto renderer = QuickJsRendererBuilder()
-        .withSource([]() { return Resources::read("views.js"); })
-        .withPrototypes(Testdata::prototypes)
-        .withBindings(Testdata::bindings)
+        .source([]() { return Resources::read("views.js"); })
+        .prototypes(Testdata::prototypes)
+        .bindings(Testdata::bindings)
         .build();
 
     renderer.render("TodoList", Testdata::forTodoList(), stream);
@@ -53,9 +53,9 @@ TEST_CASE("QuickJsRendererBuilder", "[quickjs]") {
 
   SECTION("build a creator") {
     auto creator = QuickJsRendererBuilder()
-        .withSource(Resources::read("views.js"))
-        .withPrototypes(Testdata::prototypes)
-        .withBindings(Testdata::bindings)
+        .source(Resources::read("views.js"))
+        .prototypes(Testdata::prototypes)
+        .bindings(Testdata::bindings)
         .creator();
 
     creator()->render("TodoList", Testdata::forTodoList(), stream);
