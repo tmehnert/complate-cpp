@@ -11,12 +11,12 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-set(LIBRARY_NAME complatecore)
+set(COMPONENT_NAME core)
+set(LIBRARY_NAME ${PROJECT_NAME}${COMPONENT_NAME})
 
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 set(SOURCES ${SOURCES})
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
 file(GLOB_RECURSE LIBRARY_INCLUDE_FILES "${CMAKE_SOURCE_DIR}/include/complate/core/*.h")
 
 if (BUILD_SHARED)
@@ -24,16 +24,25 @@ if (BUILD_SHARED)
 else ()
     add_library(${LIBRARY_NAME} STATIC ${SOURCES})
 endif ()
+add_library(${PROJECT_NAME}::${COMPONENT_NAME} ALIAS ${LIBRARY_NAME})
 
+target_include_directories(${LIBRARY_NAME}
+    PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+    )
+target_link_libraries(${LIBRARY_NAME}
+    PRIVATE "$<BUILD_INTERFACE:code_coverage>"
+    )
 set_target_properties(${LIBRARY_NAME} PROPERTIES
-        VERSION ${PROJECT_VERSION}
-        SOVERSION ${PROJECT_VERSION_MAJOR}
-        PUBLIC_HEADER "${LIBRARY_INCLUDE_FILES}")
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    PUBLIC_HEADER "${LIBRARY_INCLUDE_FILES}"
+    EXPORT_NAME ${COMPONENT_NAME}
+    )
 
 install(TARGETS ${LIBRARY_NAME}
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib
-        PUBLIC_HEADER DESTINATION include/complate/core)
-
-target_link_libraries(${LIBRARY_NAME} PUBLIC code_coverage)
+    EXPORT "${TARGETS_EXPORT_NAME}"
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    PUBLIC_HEADER DESTINATION include/complate/core
+    )

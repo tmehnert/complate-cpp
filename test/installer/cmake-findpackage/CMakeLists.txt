@@ -11,11 +11,18 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-option(CODE_COVERAGE "Enable code coverage" OFF)
+cmake_minimum_required(VERSION 3.14)
 
-add_library(code_coverage INTERFACE)
+project(complate-cmake-findpackage DESCRIPTION "Test import complate using CMake find_package")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+enable_testing()
 
-if (CODE_COVERAGE)
-    target_compile_options(code_coverage INTERFACE -O0 -g --coverage)
-    target_link_options(code_coverage INTERFACE --coverage)
-endif ()
+find_package(complate REQUIRED CONFIG)
+
+add_executable(${PROJECT_NAME} main.cpp)
+add_test(NAME "CMakeInstallUsingFindPackage" COMMAND ${PROJECT_NAME})
+
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE complate::quickjs complate::v8)
