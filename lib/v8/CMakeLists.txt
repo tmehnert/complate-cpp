@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 set(COMPONENT_NAME v8)
-set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}${COMPONENT_NAME})
+set(LIBRARY_NAME ${PROJECT_NAME}${COMPONENT_NAME})
 
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 set(SOURCES ${SOURCES})
@@ -27,7 +27,7 @@ else ()
     add_library(${LIBRARY_NAME} STATIC ${SOURCES})
     target_link_libraries(${LIBRARY_NAME} PUBLIC -lv8 complatecore)
 endif ()
-add_library(${CMAKE_PROJECT_NAME}::${COMPONENT_NAME} ALIAS ${LIBRARY_NAME})
+add_library(${PROJECT_NAME}::${COMPONENT_NAME} ALIAS ${LIBRARY_NAME})
 
 target_include_directories(${LIBRARY_NAME}
     PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
