@@ -20,32 +20,32 @@ using namespace complate;
 
 class QuickJsRendererBuilder::Impl {
 public:
-  void withSource(string source) {
-    m_source = move(source);
+  void source(string sourceObj) {
+    m_source = move(sourceObj);
     m_sourceCreator = {};
   }
 
-  void withSource(SourceCreator sourceCreator) {
+  void source(SourceCreator sourceCreator) {
     m_source = {};
     m_sourceCreator = move(sourceCreator);
   }
 
-  void withBindings(Object bindings) {
-    m_bindings = move(bindings);
+  void bindings(Object bindingsObj) {
+    m_bindings = move(bindingsObj);
     m_bindingsCreator = {};
   }
 
-  void withBindings(BindingsCreator bindingsCreator) {
+  void bindings(BindingsCreator bindingsCreator) {
     m_bindings = {};
     m_bindingsCreator = move(bindingsCreator);
   }
 
-  void withPrototypes(vector<Prototype> prototypes) {
-    m_prototypes = move(prototypes);
+  void prototypes(vector<Prototype> prototypeList) {
+    m_prototypes = move(prototypeList);
     m_prototypesCreator = {};
   }
 
-  void withPrototypes(PrototypesCreator prototypesCreator) {
+  void prototypes(PrototypesCreator prototypesCreator) {
     m_prototypes = vector<Prototype>();
     m_prototypesCreator = move(prototypesCreator);
   }
@@ -56,12 +56,16 @@ public:
             (m_bindingsCreator) ? invoke(m_bindingsCreator) : m_bindings};
   }
 
+  [[nodiscard]] unique_ptr<QuickJsRenderer> unique() const {
+    return make_unique<QuickJsRenderer>(
+        (m_sourceCreator) ? invoke(m_sourceCreator) : m_source,
+        (m_prototypesCreator) ? invoke(m_prototypesCreator) : m_prototypes,
+        (m_bindingsCreator) ? invoke(m_bindingsCreator) : m_bindings);
+  }
+
   [[nodiscard]] Renderer::Creator creator() const {
     return [*this] {
-      return make_unique<QuickJsRenderer>(
-          (m_sourceCreator) ? invoke(m_sourceCreator) : m_source,
-          (m_prototypesCreator) ? invoke(m_prototypesCreator) : m_prototypes,
-          (m_bindingsCreator) ? invoke(m_bindingsCreator) : m_bindings);
+      return unique();
     };
   }
 
@@ -79,42 +83,46 @@ QuickJsRendererBuilder::QuickJsRendererBuilder()
 
 QuickJsRendererBuilder::~QuickJsRendererBuilder() = default;
 
-QuickJsRendererBuilder &QuickJsRendererBuilder::withSource(string source) {
-  m_impl->withSource(move(source));
+QuickJsRendererBuilder &QuickJsRendererBuilder::source(string sourceObj) {
+  m_impl->source(move(sourceObj));
   return *this;
 }
 
-QuickJsRendererBuilder &QuickJsRendererBuilder::withSource(
+QuickJsRendererBuilder &QuickJsRendererBuilder::source(
     QuickJsRendererBuilder::SourceCreator sourceCreator) {
-  m_impl->withSource(move(sourceCreator));
+  m_impl->source(move(sourceCreator));
   return *this;
 }
 
-QuickJsRendererBuilder &QuickJsRendererBuilder::withBindings(Object bindings) {
-  m_impl->withBindings(move(bindings));
+QuickJsRendererBuilder &QuickJsRendererBuilder::bindings(Object bindingsObj) {
+  m_impl->bindings(move(bindingsObj));
   return *this;
 }
 
-QuickJsRendererBuilder &QuickJsRendererBuilder::withBindings(
-    QuickJsRendererBuilder::BindingsCreator bindings) {
-  m_impl->withBindings(move(bindings));
+QuickJsRendererBuilder &QuickJsRendererBuilder::bindings(
+    QuickJsRendererBuilder::BindingsCreator bindingsCreator) {
+  m_impl->bindings(move(bindingsCreator));
   return *this;
 }
 
-QuickJsRendererBuilder &QuickJsRendererBuilder::withPrototypes(
-    std::vector<Prototype> prototypes) {
-  m_impl->withPrototypes(move(prototypes));
+QuickJsRendererBuilder &QuickJsRendererBuilder::prototypes(
+    std::vector<Prototype> prototypeList) {
+  m_impl->prototypes(move(prototypeList));
   return *this;
 }
 
-QuickJsRendererBuilder &QuickJsRendererBuilder::withPrototypes(
+QuickJsRendererBuilder &QuickJsRendererBuilder::prototypes(
     QuickJsRendererBuilder::PrototypesCreator prototypesCreator) {
-  m_impl->withPrototypes(move(prototypesCreator));
+  m_impl->prototypes(move(prototypesCreator));
   return *this;
 }
 
 QuickJsRenderer QuickJsRendererBuilder::build() const {
   return m_impl->build();
+}
+
+unique_ptr<QuickJsRenderer> complate::QuickJsRendererBuilder::unique() const {
+  return m_impl->unique();
 }
 
 Renderer::Creator QuickJsRendererBuilder::creator() const {

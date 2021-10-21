@@ -31,9 +31,9 @@ TEST_CASE("QuickJsRendererBuilder", "[quickjs]") {
   SECTION("build with values") {
 
     auto renderer = QuickJsRendererBuilder()
-        .withSource(Resources::read("views.js"))
-        .withPrototypes(Testdata::prototypes())
-        .withBindings(Testdata::bindings())
+        .source(Resources::read("views.js"))
+        .prototypes(Testdata::prototypes())
+        .bindings(Testdata::bindings())
         .build();
 
     renderer.render("TodoList", Testdata::forTodoList(), stream);
@@ -42,20 +42,31 @@ TEST_CASE("QuickJsRendererBuilder", "[quickjs]") {
 
   SECTION("build with creators") {
     auto renderer = QuickJsRendererBuilder()
-        .withSource([]() { return Resources::read("views.js"); })
-        .withPrototypes(Testdata::prototypes)
-        .withBindings(Testdata::bindings)
+        .source([]() { return Resources::read("views.js"); })
+        .prototypes(Testdata::prototypes)
+        .bindings(Testdata::bindings)
         .build();
 
     renderer.render("TodoList", Testdata::forTodoList(), stream);
     REQUIRE_THAT(stream.str(), Equals(Resources::read("todolist.html")));
   }
 
+  SECTION("build a unique_ptr") {
+    unique_ptr<QuickJsRenderer> unique = QuickJsRendererBuilder()
+        .source(Resources::read("views.js"))
+        .prototypes(Testdata::prototypes)
+        .bindings(Testdata::bindings)
+        .unique();
+
+    unique->render("TodoList", Testdata::forTodoList(), stream);
+    REQUIRE_THAT(stream.str(), Equals(Resources::read("todolist.html")));
+  }
+
   SECTION("build a creator") {
     auto creator = QuickJsRendererBuilder()
-        .withSource(Resources::read("views.js"))
-        .withPrototypes(Testdata::prototypes)
-        .withBindings(Testdata::bindings)
+        .source(Resources::read("views.js"))
+        .prototypes(Testdata::prototypes)
+        .bindings(Testdata::bindings)
         .creator();
 
     creator()->render("TodoList", Testdata::forTodoList(), stream);

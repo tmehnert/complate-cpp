@@ -32,12 +32,12 @@ int main() {
   // clang-format: off
   V8Platform v8Platform;
   V8Renderer v8Renderer = V8RendererBuilder()
-      .withSource(VIEWS)
+      .source(VIEWS)
       .build();
   v8Renderer.render("Works with V8Renderer", parameters, stream);
 
   QuickJsRenderer quickJsRenderer = QuickJsRendererBuilder()
-      .withSource(VIEWS)
+      .source(VIEWS)
       .build();
   quickJsRenderer.render("Works with QuickJsRenderer", parameters, stream);
   // clang-format: on

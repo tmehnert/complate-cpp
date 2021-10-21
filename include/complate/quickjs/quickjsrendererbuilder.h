@@ -41,54 +41,58 @@ public:
   /**
    * Pass the content of your views.js bundle.
    *
-   * @param source The complate JavaScript source bundle with the views.
+   * @param sourceObj The complate JavaScript source bundle with the views.
    * @return Reference to this builder.
    */
-  QuickJsRendererBuilder &withSource(std::string source);
+  QuickJsRendererBuilder &source(std::string sourceObj);
 
   /**
    * Pass a function that return the content of your views.js bundle.
    *
-   * @param sourceCreator A function that return your  complate JavaScript
+   * @param sourceCreator A function that return your complate JavaScript
    * source bundle with the views.
    * @return Reference to this builder.
    */
-  QuickJsRendererBuilder &withSource(SourceCreator sourceCreator);
+  QuickJsRendererBuilder &source(SourceCreator sourceCreator);
 
   /**
    * Pass your bindings.
    *
-   * @param bindings Global variables available in every view.
+   * @param bindingsObj Global variables which are available in every view.
    * @return Reference to this builder.
    */
-  QuickJsRendererBuilder &withBindings(Object bindings);
+  QuickJsRendererBuilder &bindings(Object bindingsObj);
 
   /**
    * Pass a function that return your bindings.
    *
-   * @param bindings Global variables available in every view.
+   * @param bindingsCreator A function that return your Global variables
+   * which are available in every view.
    * @return Reference to this builder.
    */
-  QuickJsRendererBuilder &withBindings(BindingsCreator bindingsCretor);
+  QuickJsRendererBuilder &bindings(BindingsCreator bindingsCreator);
 
   /**
-   * Pass your Prototypes.
+   * Pass your prototypes.
    *
-   * @param prototypes Prototypes for C++ classes to be supported via Proxy.
+   * @param prototypeList Prototypes for C++ classes to be supported via Proxy.
    * @return Reference to this builder.
    */
-  QuickJsRendererBuilder &withPrototypes(std::vector<Prototype> prototypes);
+  QuickJsRendererBuilder &prototypes(std::vector<Prototype> prototypeList);
 
   /**
-   * Pass a function that return your Prototypes.
+   * Pass a function that return your prototypes.
    *
-   * @param prototypes Prototypes for C++ classes to be supported via Proxy.
+   * @param prototypesCreator A function that return Prototypes for C++ classes
+   * to be supported via Proxy.
    * @return Reference to this builder.
    */
-  QuickJsRendererBuilder &withPrototypes(PrototypesCreator prototypesCreator);
+  QuickJsRendererBuilder &prototypes(PrototypesCreator prototypesCreator);
 
   /** Build a renderer */
   [[nodiscard]] QuickJsRenderer build() const;
+  /** Build a unique_ptr renderer */
+  [[nodiscard]] std::unique_ptr<QuickJsRenderer> unique() const;
   /** Create an Creator with can build a renderer */
   [[nodiscard]] Renderer::Creator creator() const;
 

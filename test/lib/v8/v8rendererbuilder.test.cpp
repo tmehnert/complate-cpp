@@ -31,9 +31,9 @@ TEST_CASE("V8RendererBuilder", "[V8]") {
   SECTION("build with values") {
 
     auto renderer = V8RendererBuilder()
-        .withSource(Resources::read("views.js"))
-        .withPrototypes(Testdata::prototypes())
-        .withBindings(Testdata::bindings())
+        .source(Resources::read("views.js"))
+        .prototypes(Testdata::prototypes())
+        .bindings(Testdata::bindings())
         .build();
 
     renderer.render("TodoList", Testdata::forTodoList(), stream);
@@ -42,20 +42,31 @@ TEST_CASE("V8RendererBuilder", "[V8]") {
 
   SECTION("build with creators") {
     auto renderer = V8RendererBuilder()
-        .withSource([]() { return Resources::read("views.js"); })
-        .withPrototypes(Testdata::prototypes)
-        .withBindings(Testdata::bindings)
+        .source([]() { return Resources::read("views.js"); })
+        .prototypes(Testdata::prototypes)
+        .bindings(Testdata::bindings)
         .build();
 
     renderer.render("TodoList", Testdata::forTodoList(), stream);
     REQUIRE_THAT(stream.str(), Equals(Resources::read("todolist.html")));
   }
 
+  SECTION("build a unique_ptr") {
+    unique_ptr<V8Renderer> unique = V8RendererBuilder()
+        .source(Resources::read("views.js"))
+        .prototypes(Testdata::prototypes)
+        .bindings(Testdata::bindings)
+        .unique();
+
+    unique->render("TodoList", Testdata::forTodoList(), stream);
+    REQUIRE_THAT(stream.str(), Equals(Resources::read("todolist.html")));
+  }
+
   SECTION("build a creator") {
     auto creator = V8RendererBuilder()
-        .withSource(Resources::read("views.js"))
-        .withPrototypes(Testdata::prototypes)
-        .withBindings(Testdata::bindings)
+        .source(Resources::read("views.js"))
+        .prototypes(Testdata::prototypes)
+        .bindings(Testdata::bindings)
         .creator();
 
     creator()->render("TodoList", Testdata::forTodoList(), stream);
