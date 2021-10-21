@@ -26,8 +26,7 @@ target_include_directories(${BINARY}
 target_link_libraries(${BINARY}
     PRIVATE
     httplib::httplib
-    ${CMAKE_PROJECT_NAME}core
-    ${CMAKE_PROJECT_NAME}quickjs
+    complate::quickjs
     ${CMAKE_THREAD_LIBS_INIT}
     )
 target_compile_definitions(${BINARY}

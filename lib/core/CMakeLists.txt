@@ -11,7 +11,8 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-set(LIBRARY_NAME complatecore)
+set(COMPONENT_NAME core)
+set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}${COMPONENT_NAME})
 
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 set(SOURCES ${SOURCES})
@@ -23,6 +24,7 @@ if (BUILD_SHARED)
 else ()
     add_library(${LIBRARY_NAME} STATIC ${SOURCES})
 endif ()
+add_library(${CMAKE_PROJECT_NAME}::${COMPONENT_NAME} ALIAS ${LIBRARY_NAME})
 
 target_include_directories(${LIBRARY_NAME}
     PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -34,6 +36,7 @@ set_target_properties(${LIBRARY_NAME} PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
     PUBLIC_HEADER "${LIBRARY_INCLUDE_FILES}"
+    EXPORT_NAME ${COMPONENT_NAME}
     )
 
 install(TARGETS ${LIBRARY_NAME}

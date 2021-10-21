@@ -27,9 +27,9 @@ target_link_libraries(${BINARY} PUBLIC
     Catch2::Catch2
     trompeloeil
     ${CMAKE_THREAD_LIBS_INIT}
-    ${CMAKE_PROJECT_NAME}core
-    ${CMAKE_PROJECT_NAME}quickjs
-    ${CMAKE_PROJECT_NAME}v8
+    complate::core
+    complate::quickjs
+    complate::v8
     PRIVATE "$<BUILD_INTERFACE:code_coverage>"
     )
 target_compile_definitions(${BINARY}

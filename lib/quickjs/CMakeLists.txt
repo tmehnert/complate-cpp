@@ -11,7 +11,8 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-set(LIBRARY_NAME complatequickjs)
+set(COMPONENT_NAME quickjs)
+set(LIBRARY_NAME ${CMAKE_PROJECT_NAME}${COMPONENT_NAME})
 
 set(QUICKJS_SRC_DIR ${PROJECT_SOURCE_DIR}/deps/quickjs)
 file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
@@ -33,6 +34,7 @@ else ()
     add_library(${LIBRARY_NAME} STATIC ${SOURCES})
     target_link_libraries(${LIBRARY_NAME} PUBLIC complatecore)
 endif ()
+add_library(${CMAKE_PROJECT_NAME}::${COMPONENT_NAME} ALIAS ${LIBRARY_NAME})
 
 target_include_directories(${LIBRARY_NAME}
     PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
@@ -47,6 +49,7 @@ set_target_properties(${LIBRARY_NAME} PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
     PUBLIC_HEADER "${LIBRARY_INCLUDE_FILES}"
+    EXPORT_NAME ${COMPONENT_NAME}
     )
 
 install(TARGETS ${LIBRARY_NAME}
