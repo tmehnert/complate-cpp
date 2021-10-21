@@ -47,7 +47,7 @@ int main() {
   // clang-format on
 
   httplib::Server server;
-  server.Get("/", [&](auto &, httplib::Response &res) {
+  server.Get("/", [&](auto &, auto &res) {
     /* Define some data passed to the view */
     Object parameters;
     parameters.emplace("person", Object{{"name", "John Doe"}});
@@ -55,6 +55,21 @@ int main() {
     /* Render Greeting, found at (views/greeting.jsx) */
     res.body = renderer.renderToString("Greeting", parameters);
     res.status = 200;
+    res.set_header("Content-Type", "text/html");
+  });
+  server.set_exception_handler([](auto &, auto &res, exception &) {
+    /* Just to give you a hint, where you can solve the problem */
+    stringstream ss;
+    ss << "<html>"
+       << "<head><title>Oh no!</title><head>"
+       << "<body>"
+       << "<h1>It looks like a syntax error in jsx</h1>"
+       << "<h2>Fix it and reload your browser</h2>"
+       << "<p>Your 'npm start' output may help you.</p>"
+       << "</body>"
+       << "</html>";
+    res.body = ss.str();
+    res.status = 500;
     res.set_header("Content-Type", "text/html");
   });
 
