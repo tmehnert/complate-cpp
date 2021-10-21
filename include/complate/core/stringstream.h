@@ -33,7 +33,7 @@ public:
   /**
    * Construct a StringStream.
    */
-  explicit StringStream();
+  StringStream();
 
   ~StringStream() override;
 
