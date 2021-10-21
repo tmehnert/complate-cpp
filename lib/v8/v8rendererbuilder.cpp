@@ -56,6 +56,13 @@ public:
            (m_bindingsCreator) ? invoke(m_bindingsCreator) : m_bindings};
  }
 
+ [[nodiscard]] unique_ptr<V8Renderer> unique() const {
+   return make_unique<V8Renderer>(
+       (m_sourceCreator) ? invoke(m_sourceCreator) : m_source,
+       (m_prototypesCreator) ? invoke(m_prototypesCreator) : m_prototypes,
+       (m_bindingsCreator) ? invoke(m_bindingsCreator) : m_bindings);
+ }
+
  [[nodiscard]] Renderer::Creator creator() const {
    return [*this] {
      return make_unique<V8Renderer>(
@@ -115,6 +122,10 @@ V8RendererBuilder &V8RendererBuilder::prototypes(
 
 V8Renderer V8RendererBuilder::build() const {
  return m_impl->build();
+}
+
+unique_ptr<V8Renderer> complate::V8RendererBuilder::unique() const {
+  return m_impl->unique();
 }
 
 Renderer::Creator V8RendererBuilder::creator() const {

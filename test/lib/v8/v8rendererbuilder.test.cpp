@@ -51,6 +51,17 @@ TEST_CASE("V8RendererBuilder", "[V8]") {
     REQUIRE_THAT(stream.str(), Equals(Resources::read("todolist.html")));
   }
 
+  SECTION("build a unique_ptr") {
+    unique_ptr<V8Renderer> unique = V8RendererBuilder()
+        .source(Resources::read("views.js"))
+        .prototypes(Testdata::prototypes)
+        .bindings(Testdata::bindings)
+        .unique();
+
+    unique->render("TodoList", Testdata::forTodoList(), stream);
+    REQUIRE_THAT(stream.str(), Equals(Resources::read("todolist.html")));
+  }
+
   SECTION("build a creator") {
     auto creator = V8RendererBuilder()
         .source(Resources::read("views.js"))
