@@ -47,6 +47,29 @@ Create a renderer with your `views.js` bundle and render HTML.
   renderer.render("Greeting", parameters, stream);
 ```
 
+### Running tests and example
+The unittests and the example are not built by default, you have to enable
+them using BUILD_TESTS=on and BUILD_EXAMPLE=on as shown below.
+```shell
+# install dependencies
+sudo apt install -y build-essential git cmake libv8-dev
+# build the project with tests and example enabled
+git clone https://github.com/tmehnert/complate-cpp.git && cd complate-cpp
+cmake -B build -DBUILD_TESTS=on -DBUILD_EXAMPLE=on
+cmake --build build -j4
+cd build/
+
+# execute tests
+ctest --output-on-failure
+# run example, which starts a webserver which serves views/greeting.jsx.
+example/complate-example
+```
+While the example is running you can run `npm start` in another terminal,
+edit [views/greeting.jsx](views/greeting.jsx) and refresh your browser.
+You will see your changes without restarting the example.
+This happens because the example make use of the complate::ReEvaluatingRenderer
+which can speed up your local development.
+
 ### Installation
 ```shell
 sudo apt-get install libv8-dev
@@ -93,14 +116,6 @@ target_link_libraries(your_app PRIVATE complate::v8)
 The library is tested with following compilers.
 * GCC 7 - 10 (on Ubuntu 20.04)
 * Clang 7 - 12 (on Ubuntu 20.04)
-
-#### Running Tests
-Type following commands to run the unittests on your system.
-```shell
-mkdir build && cd build
-cmake -DBUILD_TESTS=on ..
-make && make test
-```
 
 ### Dependencies
 * QuickJS, MIT Licence (bundled)
