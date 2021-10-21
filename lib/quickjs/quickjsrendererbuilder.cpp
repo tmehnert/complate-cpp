@@ -56,12 +56,16 @@ public:
             (m_bindingsCreator) ? invoke(m_bindingsCreator) : m_bindings};
   }
 
+  [[nodiscard]] unique_ptr<QuickJsRenderer> unique() const {
+    return make_unique<QuickJsRenderer>(
+        (m_sourceCreator) ? invoke(m_sourceCreator) : m_source,
+        (m_prototypesCreator) ? invoke(m_prototypesCreator) : m_prototypes,
+        (m_bindingsCreator) ? invoke(m_bindingsCreator) : m_bindings);
+  }
+
   [[nodiscard]] Renderer::Creator creator() const {
     return [*this] {
-      return make_unique<QuickJsRenderer>(
-          (m_sourceCreator) ? invoke(m_sourceCreator) : m_source,
-          (m_prototypesCreator) ? invoke(m_prototypesCreator) : m_prototypes,
-          (m_bindingsCreator) ? invoke(m_bindingsCreator) : m_bindings);
+      return unique();
     };
   }
 
@@ -115,6 +119,10 @@ QuickJsRendererBuilder &QuickJsRendererBuilder::prototypes(
 
 QuickJsRenderer QuickJsRendererBuilder::build() const {
   return m_impl->build();
+}
+
+unique_ptr<QuickJsRenderer> complate::QuickJsRendererBuilder::unique() const {
+  return m_impl->unique();
 }
 
 Renderer::Creator QuickJsRendererBuilder::creator() const {

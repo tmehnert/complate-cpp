@@ -91,6 +91,8 @@ public:
 
   /** Build a renderer */
   [[nodiscard]] QuickJsRenderer build() const;
+  /** Build a unique_ptr renderer */
+  [[nodiscard]] std::unique_ptr<QuickJsRenderer> unique() const;
   /** Create an Creator with can build a renderer */
   [[nodiscard]] Renderer::Creator creator() const;
 
