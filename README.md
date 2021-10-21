@@ -57,6 +57,38 @@ sudo make install
 sudo ldconfig
 ```
 
+#### CMake link installed library
+When you have installed the library, you can use `find_package` and
+`target_link_libraries` as follows.
+```cmake
+find_package(complate REQUIRED CONFIG)
+# and
+target_link_libraries(your_app PRIVATE complate::quickjs)
+# or
+target_link_libraries(your_app PRIVATE complate::v8)
+```
+
+#### CMake use FetchContent
+Another possibility, without having to install the library, is let CMake fetch
+it. When you use this method, you may not use `find_package(complate)`.
+Just put the following commands in your CMakeLists.txt file
+and replace the GIT_TAG `HEAD` with the commit-sha or git-tag you want.
+```cmake
+message("-- Fetching complate...")
+FetchContent_Declare(
+    complate
+    GIT_REPOSITORY https://github.com/tmehnert/complate-cpp.git
+    GIT_TAG HEAD
+    GIT_SHALLOW 1
+)
+FetchContent_MakeAvailable(complate)
+message("-- Fetching complate - done")
+# and
+target_link_libraries(your_app PRIVATE complate::quickjs)
+# or
+target_link_libraries(your_app PRIVATE complate::v8)
+```
+
 ### Compatibility
 The library is tested with following compilers.
 * GCC 7 - 10 (on Ubuntu 20.04)
