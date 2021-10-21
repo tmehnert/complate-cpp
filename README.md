@@ -72,12 +72,13 @@ which can speed up your local development.
 
 ### Installation
 ```shell
-sudo apt-get install libv8-dev
-mkdir build && cd build
-cmake ..
-make
-sudo make install
-sudo ldconfig
+# install dependencies
+sudo apt install -y build-essential git cmake libv8-dev
+# build and install the library
+git clone https://github.com/tmehnert/complate-cpp.git && cd complate-cpp
+cmake -B build
+cmake --build build -j4
+sudo cmake --install build/
 ```
 
 #### CMake link installed library
