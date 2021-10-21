@@ -16,18 +16,17 @@ jobs:
       - name: Install Dependencies
         run: sudo apt-get install -y libv8-dev
 
-      - name: Configure CMake
+      - name: Configure CMake FetchContent
         run: |
           cmake -B ${{github.workspace}}/build \
             test/installer/cmake-fetchcontent
 
-      - name: Build
+      - name: Build FetchContent
         env:
           CMAKE_BUILD_PARALLEL_LEVEL: 2
-        run: |
-          cmake --build ${{github.workspace}}/build
+        run: cmake --build ${{github.workspace}}/build
 
-      - name: Test
+      - name: Test FetchContent
         working-directory: ${{github.workspace}}/build
         run: ctest --output-on-failure
 
