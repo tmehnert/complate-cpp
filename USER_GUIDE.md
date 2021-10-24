@@ -120,6 +120,9 @@ renderer.registerView(Greeting)
 
 ## Instantiate a Renderer
 
+Now we go inside the C++ code of your application and set up the renderer. There are some possibilities you have, which
+are described in this section.
+
 ### Choose a Renderer implementation
 
 You can either choose QuickJs or V8 for the underlying JavaScript engine. QuickJs is smaller and bundled, V8 is faster
@@ -264,6 +267,9 @@ auto renderer = ReEvaluatingRenderer(QuickJsRendererBuilder()
 ```
 
 ## Rendering HTML
+
+Now all is prepared, we can use the renderer, passing the view name and parameters to it and doing somewhat with the
+HTML output. In this section you also see what happens when an error in JSX occurs and how to handle them.
 
 ### Render to string
 
