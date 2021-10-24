@@ -11,7 +11,7 @@ development machine or ci system. Let's assume you have an empty project and get
 In this section you will create your pipeline in order be able to create views. We will
 use [faucet-pipeline](https://www.faucet-pipeline.org/) as our asset pipeline in this example.
 
-**Initialize your package.json**
+#### Initialize your package.json
 
 ```shell
 npm init
@@ -24,7 +24,7 @@ npm install --save-dev \
   faucet-pipeline-js
 ```
 
-**Adding a faucet.config.js file with following content to root directory**
+#### Adding a faucet.config.js file with following content to root directory
 
 ```js
 "use strict";
@@ -46,7 +46,7 @@ module.exports = {
 };
 ```
 
-**Adding a views/index.js file with following content**
+#### Adding a views/index.js file with following content
 
 ```js
 import Renderer from "complate-stream";
@@ -62,7 +62,7 @@ export default function render(view, params, stream) {
 }
 ```
 
-**Add some useful scripts to your package.json to run the pipeline**
+#### Add some useful scripts to your package.json to run the pipeline
 
 ```json
 {
@@ -73,7 +73,7 @@ export default function render(view, params, stream) {
 }
 ```
 
-**Testing your pipeline**
+#### Testing your pipeline
 
 ```shell
 # Run following, which compile your views once and terminate.
@@ -89,7 +89,7 @@ npm start
 In this section you will create a JSX view and register it to the engine. After adding the files, please
 run `npm run compile` to check if it works.
 
-**Adding a views/greeting.jsx file with following content**
+#### Adding a views/greeting.jsx file with following content
 
 ```jsx
 // This line have to be included in every view.
@@ -108,7 +108,7 @@ export default function Greeting({person}) {
 }
 ```
 
-**Register your view by adding this to views/index.js**
+#### Register your view by adding this to views/index.js
 
 ```js
 import Greeting from "./greeting"
@@ -361,7 +361,7 @@ hopefully should be quite easy. But sometimes you have to pass data from JavaScr
 callback function for example. Then you have to pay more attention on the accessors, because JavaScript can pass you
 anything.
 
-**Accessing a value the safe way**
+#### Accessing a value the safe way
 
 ```c++
 Value value = "foo";
@@ -374,7 +374,7 @@ assert(value.optional<string>().value() == "foo");
 assert(value.optional<string>().value_or("") == "foo");
 ```
 
-**Type conversion**
+#### Type conversion
 
 ```c++
 Value i32value = (int32_t)-23;
@@ -388,7 +388,7 @@ Value i64value = (int64_t)-23;
 assert(i32value == i64value);
 ```
 
-**Passing optionals**
+#### Passing optionals
 
 ```c++
 Value value = optional<string>("bar");
@@ -508,7 +508,7 @@ assert(value.is<Object>());
 Can be used to create a callback to C++, which can be used like any other JavaScript function. It is also possible to
 return an optional from your function, when it can't supply a value.
 
-**Without arguments**
+#### Without arguments
 
 ```c++
 string getSoftwareVersion() { return "0.0.1"; }
@@ -522,7 +522,7 @@ Value value = version;
 assert(value.is<Function>());
 ```
 
-**With arguments**
+#### With arguments
 
 ```c++
 string toUppercaseA(const Array &args) { return "first arg -> to upper"; }
