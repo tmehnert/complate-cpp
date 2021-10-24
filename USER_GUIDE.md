@@ -161,9 +161,9 @@ are described in this section.
 
 ### Choose a Renderer implementation
 
-You can either choose QuickJs or V8 for the underlying JavaScript engine. QuickJs is smaller and bundled, V8 is faster
-but need the V8 libraries installed on your system. Both of them implement the same interface to render HTML, so you can
-easily change your decision later.
+You can either choose [QuickJS](https://bellard.org/quickjs/) or [V8](https://v8.dev/) for the underlying JavaScript
+engine. QuickJs is smaller and bundled, V8 is faster but need the V8 libraries installed on your system. Both of them
+implement the same interface to render HTML, so you can easily change your decision later.
 
 ```c++
 #include <complate/quickjs/quickjsrendererbuilder.h>
