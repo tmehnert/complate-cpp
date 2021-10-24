@@ -263,6 +263,75 @@ auto renderer = ReEvaluatingRenderer(QuickJsRendererBuilder()
 );
 ```
 
+## Rendering HTML
+
+### Render to string
+
+This is the easiest way is to render your HTML. Just call the renderer and get your html back.
+
+```c++
+// Let's assume you have set up your renderer with source, bindings and prototypes.
+unique_ptr<Renderer> renderer;
+
+// Define some parameters you want to pass to your view
+auto person = make_shared<Person>("John", "Doe");
+auto parameters = Object{
+  { "person", Proxy{ "Person", person } },
+  { "links", Object{
+    { "support", "https://example.org/support" },
+    { "homepage", "https:// example.org"}
+  }}
+};
+
+// You can use renderToString to get the rendered content.
+string html = renderer->renderToString("Greeting", parameters);
+```
+
+### Render to stream
+
+You can achieve **progressive rendering** by using a Stream. The difference is that instead the renderer return the
+HTML, it's continuously written to the stream while complate generates it. You might have to implement the Stream
+interface in order to forward HTML written to your webservers output channel. Two very simple implementations of Stream
+are included (BasicStream and StringStream).
+
+```c++
+#include <complate/core/basicstream.h>
+// Let's assume you have set up your renderer with source, bindings and prototypes.
+unique_ptr<Renderer> renderer;
+
+// Define some parameters you want to pass to your view
+auto person = make_shared<Person>("John", "Doe");
+// Let's assume you set up your view parameters like in the example above.
+auto parameters = Object{};
+
+// This way the HTML will be written piece by piecewise to the stream.
+BasicStream stream(std::cout);
+renderer->render("Greeting", parameters, stream);
+```
+
+### More realistic JSX for the examples above
+
+This is a slightly more realistic example of the "Greeting" view. It should act as a preview of what's possible with
+JSX. Some idioms will be documented in the [Appendix JSX](#appendix-jsx) section of this guide, but there are many
+better JSX guides on the web.
+
+```jsx
+import {createElement} from 'complate-stream';
+// Reusable JSX components imported from other files
+import Layout from './components/layout';
+import Link from './components/link';
+
+// JSX components feel like native HTML when used. I love it!
+export default function Greeting({person, links}) {
+    return <Layout title="Greeting | Example">
+        <h1>Hello {person.forename} {person.lastname}</h1>
+        <p>
+            Click <Link href={links.support} target="_blank"><b>here</b></Link> to get some help.
+        </p>
+    </Layout>
+}
+```
+
 ## Value model
 
 The Value model is the way you can pass data from C++ to JSX and vice versa. Every type will be accessible in JSX like a
@@ -477,4 +546,72 @@ Value value = ProxyWeak{"Person", &person};
 // Or none if type_info::name should be used.
 value = ProxyWeak{&person};
 assert(value.is<ProxyWeak>());
+```
+
+## Appendix JSX
+
+This appendix can only be a preview of what is possible with JSX. I recommend you to read some better documentation
+about JSX and [Web components](https://www.webcomponents.org/). You should start
+at [complate.org](https://complate.org/).
+
+### Reusable components
+
+In order to make your components reusable, start by putting them in a separate file to use it across your application or
+in a component library like [complate-fractal](https://github.com/complate/complate-fractal) to use it across multiple
+applications and languages like C++, Java, JavaScript or Ruby. Let's start with a separate file. Create a folder
+**views/components** and place a file **link.jsx** in it. It's used in the example shown
+at [More realistic JSX for the examples above](#more-realistic-jsx-for-the-examples-above). Because of the **children**,
+which is the content between the opening and closing tag of Link, this is might be as composable as html itself.
+
+`<Link href="https://example.org">Everything, <b>including tags</b>, can be placed here</Link>`
+
+```jsx
+import {createElement} from 'complate-stream';
+
+export default function Link({href, target, classNames}, ...children) {
+    return <a href={href} target={target} class={classNames}>
+        {{children}}
+    </a>
+}
+```
+
+### UI logic on the server
+
+Here is an example how to put some UI logic inside your components. Usually set some additional CSS classes or
+conditionally render elements. Let's make an example TodoList, where a list of Todos have a property **what**, which
+describes what to do, and can be **veryLate**, which require additional attention.
+
+```jsx
+import {createElement} from 'complate-stream';
+import Layout from './components/layout';
+
+export default function TodoList({todos}) {
+    return <Layout title="My todos">
+        <h1>My Todos</h1>
+        <section>
+            {(todos.length >= 0) ? todos.map(Todo) : <p>All work done!!!</p>}
+        </section>
+    </Layout>
+}
+
+function Todo(todo) {
+    return <div class={`todo ${todo.veryLate && 'todo--very-late'}`}>
+        {todo.what}
+    </div>
+}
+```
+
+### UI logic on the client
+
+A typical idiom to put some logic on client side is to make use of [Web components](https://www.webcomponents.org/) to
+create a custom html element which triggers your JavaScript code on client side. In this example a custom element
+**\<to-do\>** is used. For getting this to execute some Code, you would have to define this element and its behaviour in
+our clientside JavaScript assets.
+
+```jsx
+function Todo(todo) {
+    return <to-do class={`todo ${todo.veryLate && 'todo--very-late'}`}>
+        {todo.what}
+    </to-do>
+}
 ```
