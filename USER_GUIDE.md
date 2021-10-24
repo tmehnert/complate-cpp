@@ -148,8 +148,8 @@ auto v8Renderer  = V8RendererBuilder()
 ### Global bindings for your views
 
 When instantiate a renderer you can pass an Object which holds global variables that can be accessed from every view.
-The bindings can contain every type of the [View model](#view-model) and will be accessible as JavaScript globals. Just
-pass everything you want to use in a global context into the binding.
+The bindings can contain every type of the [Value model](#value-model) and will be accessible as JavaScript globals.
+Just pass everything you want to use in a global context into the binding.
 
 ```c++
 auto bindings = Object{
