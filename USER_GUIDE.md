@@ -21,11 +21,7 @@ omitted in this guide for simplicity.
     - [Exception handling](#exception-handling)
     - [More realistic JSX for the examples above](#more-realistic-jsx-for-the-examples-above)
 - [Value model](#value-model)
-    - [Undefined](#undefined)
-    - [Null](#null)
-    - [Bool](#bool)
-    - [Number](#number)
-    - [String](#string)
+    - [Primitives](#primitives)
     - [Array](#array)
     - [Object](#object)
     - [Function](#function)
@@ -395,7 +391,7 @@ export default function Greeting({person, links}) {
 ## Value model
 
 The Value model is the way you can pass data from C++ to JSX and vice versa. Every type will be accessible in JSX like a
-normal JavaScript type. It can hold primitives for which Value are implicit constructable and more complex data
+normal JavaScript type. It can hold primitives like undefined, null, bool, number and string and more complex data
 structures like arrays, objects, functions or proxies for your own C++ classes.
 
 In most cases you use this, to get the data into your view or use the comparison operator in your unittests, which
@@ -442,7 +438,11 @@ Value empty = optional<string>();
 assert(empty.is<Undefined>());
 ```
 
-### Undefined
+### Primitives
+
+A Value of a primitive is implicit constructable to avoid boilerplate code.
+
+#### Undefined
 
 A default constructed Value represent undefined. A value will become also undefined if you pass an empty optional of any
 supported type (Bool, Number, Object, Proxy...) to it.
@@ -455,27 +455,28 @@ value = optional<Object>();
 assert(value.is<Undefined>());
 ```
 
-### Null
+#### Null
 
-A null Value can be implicit constructed with nullptr.
+A null Value can be constructed with nullptr.
 
 ```c++
 Value value = nullptr;
 assert(value.is<Null>());
 ```
 
-### Bool
+#### Bool
 
-A boolean value can be implicit constructed with a bool.
+A boolean value can be constructed with a bool.
 
 ```c++
 Value value = false;
 assert(value.is<bool>());
 ```
 
-### Number
+#### Number
 
-A number value can be implicit constructed with any supported type `int32_t`, `uint32_t`, `int64_t` and `double`.
+A number value can be constructed with any supported type `int32_t`, `uint32_t`, `int64_t` and `double`. The explicit
+typecast to **int32_t** in the first is only for documentation purpose and is not required.
 
 ```c++
 Value value = (int32_t)-23;
@@ -486,11 +487,11 @@ assert(value.is<int64_t>());
 assert(value.is<uint32_t>() == false);
 ```
 
-### String
+#### String
 
-A string value can be implicit constructed with any supported type `string`, `string_view` and `const char *`. When a
-string is a static constant, you should pass it explicit as a string_view, to avoid an unnecessary copy. For safety
-reasons a String constructed by `const char *` will be copied.
+A string value can be constructed with  `string`, `string_view` and `const char *`. When a string is a static constant,
+you should pass it explicit as a string_view, to avoid an unnecessary copy. For safety reasons a String constructed
+by `const char *` will be copied.
 
 ```c++
 Value value = "foo";
