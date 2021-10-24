@@ -1,3 +1,121 @@
+# Generating views
+
+Your views need be packaged into a single **views.js** file, which have to be delivered alongside your application. The
+renderer will load this file when it becomes initialized. For the next steps you must have **npm** installed on your
+development machine or ci system. Let's assume you have an empty project and get through the steps.
+
+## Setup Pipeline
+
+In this section you will create your pipeline in order be able to create views. We will
+use [faucet-pipeline](https://www.faucet-pipeline.org/) as our asset pipeline in this example.
+
+**Initialize your package.json**
+
+```shell
+npm init
+# This package contains the rendering code.
+npm install complate-stream
+# These packages needed to transform your views during compilation time.
+npm install --save-dev \
+  @babel/plugin-transform-react-jsx \
+  faucet-pipeline-esnext \
+  faucet-pipeline-js
+```
+
+**Adding a faucet.config.js file with following content to root directory**
+
+```js
+"use strict";
+
+// The directory in which you would like to place your JSX views.
+let templateDir = "./views";
+module.exports = {
+    watchDirs: [templateDir],
+    js: [{
+        source: templateDir + "/index.js",
+        // The path where your bundle should be generted.
+        target: "./views.js",
+        exports: "render",
+        esnext: {
+            exclude: ["complate-stream"]
+        },
+        jsx: {pragma: "createElement"}
+    }]
+};
+```
+
+**Adding a views/index.js file with following content**
+
+```js
+import Renderer from "complate-stream";
+
+// Here your views will be registered. We will add your first view later.
+const renderer = new Renderer({
+    doctype: '<!DOCTYPE html>'
+});
+
+// This will export the render function which will be called from C++.
+export default function render(view, params, stream) {
+    renderer.renderView(view, params, stream)
+}
+```
+
+**Add some useful scripts to your package.json to run the pipeline**
+
+```json
+{
+  "scripts": {
+    "start": "npm run compile -- --watch",
+    "compile": "faucet --compact"
+  }
+}
+```
+
+**Testing your pipeline**
+
+```shell
+# Run following, which compile your views once and terminate.
+npm run compile
+# Or run following, which will compile continuously as you edit your views.
+npm start
+# Stop "npm start" by pressing STRG+C.
+# Congratulations you have configured your view pipeline properly.
+```
+
+## Create your first JSX view
+
+In this section you will create a JSX view and register it to the engine. After adding the files, please
+run `npm run compile` to check if it works.
+
+**Adding a views/greeting.jsx file with following content**
+
+```jsx
+// This line have to be included in every view.
+import {createElement} from 'complate-stream';
+
+// Parameter "person" is a view parameter, which will be passed from C++.
+export default function Greeting({person}) {
+    return <html>
+    <head>
+        <meta charSet="UTF-8"/>
+    </head>
+    <body>
+    <h1>Hello {person.name}</h1>
+    </body>
+    </html>
+}
+```
+
+**Register your view by adding this to views/index.js**
+
+```js
+import Greeting from "./greeting"
+
+// Place after instantiate the Renderer.
+// Use the name "Greeting", when refering this view from C++.
+renderer.registerView(Greeting)
+```
+
 # Value model
 
 The Value model is the way you can pass data from C++ to JSX and vice versa. Every type will be accessible in JSX like a
