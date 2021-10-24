@@ -1,5 +1,37 @@
 # User Guide
 
+## Table of contents
+
+- [Generating views](#generating-views)
+    - [Setup Pipeline](#setup-pipeline)
+    - [Create your first JSX view](#create-your-first-jsx-view)
+- [Instantiate a Renderer](#instantiate-a-renderer)
+    - [Choose a Renderer implementation](#choose-a-renderer-implementation)
+    - [Global bindings for your views](#global-bindings-for-your-views)
+    - [Prototypes for your own classes](#prototypes-for-your-own-classes)
+    - [ThreadLocalRenderer](#threadlocalrenderer)
+    - [ReEvaluatingRenderer](#reevaluatingrenderer)
+- [Rendering HTML](#rendering-html)
+    - [Render to string](#render-to-string)
+    - [Render to stream](#render-to-stream)
+    - [Exception handling](#exception-handling)
+    - [More realistic JSX for the examples above](#more-realistic-jsx-for-the-examples-above)
+- [Value model](#value-model)
+    - [Undefined](#undefined)
+    - [Null](#null)
+    - [Bool](#bool)
+    - [Number](#number)
+    - [String](#string)
+    - [Array](#array)
+    - [Object](#object)
+    - [Function](#function)
+    - [Proxy](#proxy)
+    - [ProxyWeak](#proxyweak)
+- [Appendix JSX](#appendix-jsx)
+    - [Reusable components](#reusable-components)
+    - [UI logic on the server](#ui-logic-on-the-server)
+    - [UI logic on the client](#ui-logic-on-the-client)
+
 ## Generating views
 
 Your views need be packaged into a single **views.js** file, which have to be delivered alongside your application. The
