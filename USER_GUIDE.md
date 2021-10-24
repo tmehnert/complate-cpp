@@ -1,10 +1,12 @@
-# Generating views
+# User Guide
+
+## Generating views
 
 Your views need be packaged into a single **views.js** file, which have to be delivered alongside your application. The
 renderer will load this file when it becomes initialized. For the next steps you must have **npm** installed on your
 development machine or ci system. Let's assume you have an empty project and get through the steps.
 
-## Setup Pipeline
+### Setup Pipeline
 
 In this section you will create your pipeline in order be able to create views. We will
 use [faucet-pipeline](https://www.faucet-pipeline.org/) as our asset pipeline in this example.
@@ -82,7 +84,7 @@ npm start
 # Congratulations you have configured your view pipeline properly.
 ```
 
-## Create your first JSX view
+### Create your first JSX view
 
 In this section you will create a JSX view and register it to the engine. After adding the files, please
 run `npm run compile` to check if it works.
@@ -116,7 +118,7 @@ import Greeting from "./greeting"
 renderer.registerView(Greeting)
 ```
 
-# Value model
+## Value model
 
 The Value model is the way you can pass data from C++ to JSX and vice versa. Every type will be accessible in JSX like a
 normal JavaScript type. It can hold primitives for which Value are implicit constructable and more complex data
@@ -166,7 +168,7 @@ Value empty = optional<string>();
 assert(empty.is<Undefined>());
 ```
 
-## Undefined
+### Undefined
 
 A default constructed Value represent undefined. A value will become also undefined if you pass an empty optional of any
 supported type (Bool, Number, Object, Proxy...) to it.
@@ -179,7 +181,7 @@ value = optional<Object>();
 assert(value.is<Undefined>());
 ```
 
-## Null
+### Null
 
 A null Value can be implicit constructed with nullptr.
 
@@ -188,7 +190,7 @@ Value value = nullptr;
 assert(value.is<Null>());
 ```
 
-## Bool
+### Bool
 
 A boolean value can be implicit constructed with a bool.
 
@@ -197,7 +199,7 @@ Value value = false;
 assert(value.is<bool>());
 ```
 
-## Number
+### Number
 
 A number value can be implicit constructed with any supported type `int32_t`, `uint32_t`, `int64_t` and `double`.
 
@@ -210,7 +212,7 @@ assert(value.is<int64_t>());
 assert(value.is<uint32_t>() == false);
 ```
 
-## String
+### String
 
 A string value can be implicit constructed with any supported type `string`, `string_view` and `const char *`. When a
 string is a static constant, you should pass it explicit as a string_view, to avoid an unnecessary copy. For safety
@@ -228,7 +230,7 @@ value = (const char*)nullptr;
 assert(value.is<Null>());
 ```
 
-## Array
+### Array
 
 An Array is a using directive for **vector\<Value\>**, so you can handle it like a standard C++ vector. It can hold
 every type of Value, that complate-cpp supports.
@@ -253,7 +255,7 @@ Array mixed = { nullptr, true, 1, 3.1415, "foo", Array{ 2, 3 } };
 assert(mixed.size() == 6);
 ```
 
-## Object
+### Object
 
 An Object is a using directive for **map<string, Value>**, so you can handle it like a standard C++ map. It can hold
 every type of Value, that complate-cpp supports. This is the most important type, because when rendering a view or pass
@@ -269,7 +271,7 @@ Value value = obj;
 assert(value.is<Object>());
 ```
 
-## Function
+### Function
 
 Can be used to create a callback to C++, which can be used like any other JavaScript function. It is also possible to
 return an optional from your function, when it can't supply a value.
@@ -304,7 +306,7 @@ Value value = uppercase;
 assert(value.is<Function>());
 ```
 
-## Proxy
+### Proxy
 
 Can be used map your C++ class directly in JSX. Your class will usable with its properties and methods like a normal
 JavaScript object. The Proxy will hold a **shared_ptr** so the lifetime of your class instance is managed.
@@ -318,7 +320,7 @@ value = Proxy{person};
 assert(value.is<Proxy>());
 ```
 
-## ProxyWeak
+### ProxyWeak
 
 Can be used map your C++ class directly in JSX. Your class will usable with its properties and methods like a normal
 JavaScript object. The Proxy will hold a **raw pointer** which have to stay valid as long as the ProxyWeak is used.
