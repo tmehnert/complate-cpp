@@ -309,6 +309,24 @@ BasicStream stream(std::cout);
 renderer->render("Greeting", parameters, stream);
 ```
 
+### Exception handling
+
+A renderer will throw **complate::Exception**, which derived from **std::runtime_error**, when an error occurs. This
+usually happens if there is some error in JSX like accessing an undefined object.
+
+```c++
+// Let's assume you have set up your renderer with source, bindings and prototypes.
+unique_ptr<Renderer> renderer;
+// Let's assume you set up your view parameters like in the example above.
+auto parameters = Object{};
+
+try {
+  string html = renderer.renderToString("Greeting", parameters);
+} catch (runtime_error &e) {
+  cerr << "Render[Greeting]: " << e.what() << endl;
+}
+```
+
 ### More realistic JSX for the examples above
 
 This is a slightly more realistic example of the "Greeting" view. It should act as a preview of what's possible with
