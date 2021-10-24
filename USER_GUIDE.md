@@ -1,5 +1,9 @@
 # User Guide
 
+This guide should help you to get started. When you need more detail look into the public headers of the library, which
+are under **#include<complate/...>**. All public complate-cpp types reside in the namespace **complate**, which is
+omitted in this guide for simplicity.
+
 ## Table of contents
 
 - [Generating views](#generating-views)
