@@ -57,7 +57,7 @@ int main() {
     res.status = 200;
     res.set_header("Content-Type", "text/html");
   });
-  server.set_exception_handler([](auto &, auto &res, exception &) {
+  server.set_exception_handler([](auto &, auto &res, exception &e) {
     /* Just to give you a hint, where you can solve the problem */
     stringstream ss;
     ss << "<html>"
@@ -66,6 +66,7 @@ int main() {
        << "<h1>It looks like a syntax error in jsx</h1>"
        << "<h2>Fix it and reload your browser</h2>"
        << "<p>Your 'npm start' output may help you.</p>"
+       << "<pre>" << e.what() << "</pre>"
        << "</body>"
        << "</html>";
     res.body = ss.str();

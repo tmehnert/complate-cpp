@@ -12,6 +12,9 @@ render JSX based HTML views. This project was inspired by
 ## Getting started
 
 ### Usage
+
+For a detailed description how to use this library checkout out the [User Guide](USER_GUIDE.md).
+
 You can choose between two rendering engines, depending on your needs.
 [QuickJS](https://bellard.org/quickjs/) which is bundled and smaller or
 [V8](https://v8.dev/) which is faster, but needs the V8 library to be installed.
