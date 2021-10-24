@@ -118,6 +118,151 @@ import Greeting from "./greeting"
 renderer.registerView(Greeting)
 ```
 
+## Instantiate a Renderer
+
+### Choose a Renderer implementation
+
+You can either choose QuickJs or V8 for the underlying JavaScript engine. QuickJs is smaller and bundled, V8 is faster
+but need the V8 libraries installed on your system. Both of them implement the same interface to render HTML, so you can
+easily change your decision later.
+
+```c++
+#include <complate/quickjs/quickjsrendererbuilder.h>
+// or
+#include <complate/quickjs/v8platform.h>
+#include <complate/quickjs/v8rendererbuilder.h>
+
+// Here we are using the builder, because it's more fluid.
+auto qjsRenderer = QuickJsRendererBuilder()
+    .source("<content-of-your-views.js")
+    .build();
+
+// Instantiate exactly one V8Platform, before using the V8Renderer.
+V8Platform v8Platform;
+// Afterwards you can use the V8Renderer normally.
+auto v8Renderer  = V8RendererBuilder()
+    .source("<content-of-your-views.js")
+    .build();
+```
+
+### Global bindings for your views
+
+When instantiate a renderer you can pass an Object which holds global variables that can be accessed from every view.
+The bindings can contain every type of the [View model](#view-model) and will be accessible as JavaScript globals. Just
+pass everything you want to use in a global context into the binding.
+
+```c++
+auto bindings = Object{
+  // "application" will become a global Object.
+  { "application", Object{
+    // With a property "name".
+    { "name", "Example" }
+  }}
+};
+
+auto renderer = QuickJsRendererBuilder()
+    .source("<content-of-your-views.js")
+    // Pass your bindings to the builder.
+    .bindings(bindings)
+    .build();
+```
+
+In JSX just declare the global you want to use as a comment and then use it.
+
+```jsx
+/* global application */
+import {createElement} from 'complate-stream';
+
+export default function About({}) {
+    return <div>
+        <span>{application.name}</span>
+    </div>
+}
+```
+
+### Prototypes for your own classes
+
+When you want to make your C++ class available in the JavaScript engine, you have to provide a prototype for your class.
+After defined and passed to the renderer, you can wrap your class into a [Proxy](#proxy) or [ProxyWeak](#proxyweak).
+This way you can use them in the global bindings Object or the view parameters Object.
+
+```c++
+// Let's assume you have a class Person
+class Person {
+public:
+  const string& getForename() const { return m_forename; }
+  const string& getLastname() const { return m_lastname; }
+  string generateGreeting(const string &greet) const {
+    return = greet + " " + m_forename + " " + m_lastname;
+  }
+private:
+  string m_forename, m_lastname;
+};
+
+#include <complate/core/prototypebuilder.h>
+
+// You can omit the string, in this case std::type_info::name will be used.
+auto prototype = PrototypeBuilder<Person>("Person")
+    // Will become a read-only properties in JavaScript
+    .property("forename", &Person::getForename)
+    .property("lastname", &Person::getLastname)
+    // Will become a method in JavaScript
+    .method("greeting", [] (Person &p, const Array &args) {
+      // See the section "Value model" at this guide to learn more about Array.
+      return p.generateGreeting(args.at(0).get<string>().value_or(""));
+    });
+
+// Usually you will have more than one prototype.
+vector<Prototype> prototypes = {prototype};
+auto renderer = QuickJsRendererBuilder()
+    .source("<content-of-your-views.js")
+    // Pass your prototypes to the builder.
+    .prototypes(prototypes)
+    .build();
+```
+
+If you want your properties to be writable, your can pass a third argument to `property` as setter which
+accept `const Value &` or use a lambda `[] (Person &p, const Value &value) {...}` if you don't want to modify your
+class. This also applies to methods, you can use a member function pointer or supply a lambda both will be accepted.
+
+### ThreadLocalRenderer
+
+This renderer instantiates and holds a renderer instance per thread. A renderer can render only one view at a time, when
+you are in a multi-threaded environment it could be much faster to use one renderer per thread.
+
+```c++
+#include <complate/core/threadlocalrenderer.h>
+
+// Make a function that load your view.js bundle from filesystem.
+string loadViewsJsFromFile() { return "<content-of-your-views.js"; }
+
+// Wrap your renderer, but use creator() instead of build().
+auto renderer = ThreadLocalRenderer(QuickJsRendererBuilder()
+    .source(loadViewsJsFromFile)
+    .creator()
+);
+```
+
+### ReEvaluatingRenderer
+
+This renderer is a development tool to make your work more comfortable. It can wrap any other renderer and instantiate
+it every time you render a view. Because of this behaviour you can edit your JSX and get the changes without having to
+restart your application. You shouldn't use this in your release, because it involves a lot of overhead and prevent the
+optimizing compiler of V8 to speed things up.
+
+```c++
+#include <complate/core/reevaluatingrenderer.h>
+
+// Make a function that load your view.js bundle from filesystem.
+string loadViewsJsFromFile() { return "<content-of-your-views.js"; }
+
+// Wrap your renderer, but use creator() instead of build().
+auto renderer = ReEvaluatingRenderer(QuickJsRendererBuilder()
+    .source(loadViewsJsFromFile)
+    .creator()
+);
+```
+
 ## Value model
 
 The Value model is the way you can pass data from C++ to JSX and vice versa. Every type will be accessible in JSX like a
