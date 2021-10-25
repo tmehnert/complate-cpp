@@ -38,10 +38,10 @@ export default function Greeting({person}) {
 #### Using them to render HTML inside your C++ application
 
 ```c++
-  unique_ptr<Renderer> renderer; // use QuickJs or V8 renderer implementation
-  string html = renderer.renderToString("Greeting", Object{
-    {"name", "John Doe"}
-  });
+unique_ptr<Renderer> renderer; // use QuickJs or V8 renderer implementation
+string html = renderer.renderToString("Greeting", Object{
+  {"name", "John Doe"}
+});
 ```
 
 ### Installation
