@@ -17,12 +17,7 @@ project was inspired by
 For a detailed description how to use this library checkout out the [User Guide](USER_GUIDE.md). I recommend you to
 check out the dedicated [Sample Project](https://github.com/tmehnert/complate-sample-cpp) to try out complate-cpp.
 
-You can choose between two rendering engines, depending on your needs.
-[QuickJS](https://bellard.org/quickjs/) which is bundled and smaller or
-[V8](https://v8.dev/) which is faster, but needs the V8 library to be installed. Both of them provide an identical
-interface to render HTML. Look at `example` and `views` for a minimal example.
-
-Define your view using JSX and compile it to plain Javascript `views.js`, see `npm run compile`.
+#### Define your views using JSX
 
 ```jsx
 import {createElement} from 'complate-stream';
@@ -40,41 +35,14 @@ export default function Greeting({person}) {
 }
 ```
 
-Create a renderer with your `views.js` bundle and render HTML.
+#### Using them to render HTML inside your C++ application
 
 ```c++
-  using namespace complate;
-  QuickJsRenderer renderer("<content-of-your-views.js>");
-  BasicStream stream(std::cout);
-
-  Object parameters;
-  parameters.emplace("person", Object{{"name", "John Doe"}});
-  renderer.render("Greeting", parameters, stream);
+  unique_ptr<Renderer> renderer; // use QuickJs or V8 renderer implementation
+  string html = renderer.renderToString("Greeting", Object{
+    {"name", "John Doe"}
+  });
 ```
-
-### Running tests and example
-
-The unittests and the example are not built by default, you have to enable them using BUILD_TESTS=on and
-BUILD_EXAMPLE=on as shown below.
-
-```shell
-# install dependencies
-sudo apt install -y build-essential git cmake libv8-dev
-# build the project with tests and example enabled
-git clone https://github.com/tmehnert/complate-cpp.git && cd complate-cpp
-cmake -B build -DBUILD_TESTS=on -DBUILD_EXAMPLE=on
-cmake --build build -j4
-cd build/
-
-# execute tests
-ctest --output-on-failure
-# run example, which starts a webserver which serves views/greeting.jsx.
-example/complate-example
-```
-
-While the example is running you can run `npm start` in another terminal, edit [views/greeting.jsx](views/greeting.jsx)
-and refresh your browser. You will see your changes without restarting the example. This happens because the example
-make use of the complate::ReEvaluatingRenderer which can speed up your local development.
 
 ### Installation
 
@@ -121,6 +89,26 @@ message("-- Fetching complate - done")
 target_link_libraries(your_app PRIVATE complate::quickjs)
 # or
 target_link_libraries(your_app PRIVATE complate::v8)
+```
+
+### Running tests and example
+
+The unittests and the example are not built by default, you have to enable them using BUILD_TESTS=on and
+BUILD_EXAMPLE=on as shown below.
+
+```shell
+# install dependencies
+sudo apt install -y build-essential git cmake libv8-dev
+# build the project with tests and example enabled
+git clone https://github.com/tmehnert/complate-cpp.git && cd complate-cpp
+cmake -B build -DBUILD_TESTS=on -DBUILD_EXAMPLE=on
+cmake --build build -j4
+cd build/
+
+# execute tests
+ctest --output-on-failure
+# run example, which starts a webserver which serves views/greeting.jsx.
+example/complate-example
 ```
 
 ### Compatibility
