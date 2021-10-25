@@ -120,16 +120,16 @@ The library is tested with following compilers.
 
 ### Dependencies
 
-* QuickJS, MIT Licence (bundled)
-* V8, MIT Licence
+* [QuickJS](https://bellard.org/quickjs/), MIT Licence (bundled)
+* [V8](https://v8.dev/), MIT Licence
 
 #### Dev dependencies
 
-* Catch2, BSL-1.0 (fetched via CMake)
-* Trompeloeil, BSL-1.0 (fetched via CMake)
-* cpp-httplib, MIT License (fetched via CMake)
-* Node.js
-* CMake >= 3.14 required
+* [Catch2](https://github.com/catchorg/Catch2), BSL-1.0 (fetched via CMake)
+* [trompeloeil](https://github.com/rollbear/trompeloeil), BSL-1.0 (fetched via CMake)
+* [cpp-httplib](https://github.com/yhirose/cpp-httplib), MIT License (fetched via CMake)
+* [Node.js](https://nodejs.org/)
+* [CMake](https://cmake.org/) >= 3.14 required
 
 ## License
 
