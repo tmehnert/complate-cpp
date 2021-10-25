@@ -169,14 +169,14 @@ implement the same interface to render HTML, so you can easily change your decis
 
 // Here we are using the builder, because it's more fluid.
 auto qjsRenderer = QuickJsRendererBuilder()
-    .source("<content-of-your-views.js")
+    .source("<content-of-your-views.js>")
     .build();
 
 // Instantiate exactly one V8Platform, before using the V8Renderer.
 V8Platform v8Platform;
 // Afterwards you can use the V8Renderer normally.
 auto v8Renderer  = V8RendererBuilder()
-    .source("<content-of-your-views.js")
+    .source("<content-of-your-views.js>")
     .build();
 ```
 
@@ -196,7 +196,7 @@ auto bindings = Object{
 };
 
 auto renderer = QuickJsRendererBuilder()
-    .source("<content-of-your-views.js")
+    .source("<content-of-your-views.js>")
     // Pass your bindings to the builder.
     .bindings(bindings)
     .build();
@@ -250,7 +250,7 @@ auto prototype = PrototypeBuilder<Person>("Person")
 // Usually you will have more than one prototype.
 vector<Prototype> prototypes = {prototype};
 auto renderer = QuickJsRendererBuilder()
-    .source("<content-of-your-views.js")
+    .source("<content-of-your-views.js>")
     // Pass your prototypes to the builder.
     .prototypes(prototypes)
     .build();
@@ -269,7 +269,7 @@ you are in a multi-threaded environment it could be much faster to use one rende
 #include <complate/core/threadlocalrenderer.h>
 
 // Make a function that load your view.js bundle from filesystem.
-string loadViewsJsFromFile() { return "<content-of-your-views.js"; }
+string loadViewsJsFromFile() { return "<content-of-your-views.js>"; }
 
 // Wrap your renderer, but use creator() instead of build().
 auto renderer = ThreadLocalRenderer(QuickJsRendererBuilder()
@@ -289,7 +289,7 @@ optimizing compiler of V8 to speed things up.
 #include <complate/core/reevaluatingrenderer.h>
 
 // Make a function that load your view.js bundle from filesystem.
-string loadViewsJsFromFile() { return "<content-of-your-views.js"; }
+string loadViewsJsFromFile() { return "<content-of-your-views.js>"; }
 
 // Wrap your renderer, but use creator() instead of build().
 auto renderer = ReEvaluatingRenderer(QuickJsRendererBuilder()
