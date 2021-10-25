@@ -14,7 +14,8 @@ project was inspired by
 
 ### Usage
 
-For a detailed description how to use this library checkout out the [User Guide](USER_GUIDE.md).
+For a detailed description how to use this library checkout out the [User Guide](USER_GUIDE.md). I recommend you to
+check out the dedicated [Sample Project](https://github.com/tmehnert/complate-sample-cpp) to try out complate-cpp.
 
 You can choose between two rendering engines, depending on your needs.
 [QuickJS](https://bellard.org/quickjs/) which is bundled and smaller or
