@@ -238,7 +238,7 @@ private:
 
 // You can omit the string, in this case std::type_info::name will be used.
 auto prototype = PrototypeBuilder<Person>("Person")
-    // Will become a read-only properties in JavaScript
+    // Will become read-only properties in JavaScript
     .property("forename", &Person::getForename)
     .property("lastname", &Person::getLastname)
     // Will become a method in JavaScript
@@ -342,7 +342,7 @@ auto person = make_shared<Person>("John", "Doe");
 // Let's assume you set up your view parameters like in the example above.
 auto parameters = Object{};
 
-// This way the HTML will be written piece by piecewise to the stream.
+// This way the HTML will be written piecewise to the stream.
 BasicStream stream(std::cout);
 renderer->render("Greeting", parameters, stream);
 ```
