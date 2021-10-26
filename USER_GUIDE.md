@@ -18,6 +18,7 @@ omitted in this guide for simplicity.
 - [Rendering HTML](#rendering-html)
     - [Render to string](#render-to-string)
     - [Render to stream](#render-to-stream)
+    - [Using JSON as view parameters](#using-json-as-view-parameters)
     - [Exception handling](#exception-handling)
     - [More realistic JSX for the examples above](#more-realistic-jsx-for-the-examples-above)
 - [Value model](#value-model)
@@ -347,6 +348,33 @@ BasicStream stream(std::cout);
 renderer->render("Greeting", parameters, stream);
 ```
 
+### Using JSON as view parameters
+
+The renderers also accept a JSON string as view parameters. This would be a smart way if your application already
+produces it. Bindings can't be declared as JSON, but it's no problem to use JSON as view parameters and declare
+bindings using the [Value model](#value-model).
+
+```c++
+// Let's assume you have set up your renderer with source and bindings.
+unique_ptr<Renderer> renderer;
+
+// The JSON has to be an object.
+string json = R"(
+{
+  "person": {
+    "name": "John Doe"
+  },
+  "links": {
+    "support": "https://example.org/support",
+    "homepage": "https:// example.org"
+  }
+}
+)";
+
+// This would produce exactly the same output as the examples above.
+string html = renderer->renderToString("Greeting", json);
+```
+
 ### Exception handling
 
 A renderer will throw **complate::Exception**, which derived from **std::runtime_error**, when an error occurs. This
@@ -624,7 +652,9 @@ applications and languages like C++, Java, JavaScript or Ruby. Let's start with 
 at [More realistic JSX for the examples above](#more-realistic-jsx-for-the-examples-above). Because of the **children**,
 which is the content between the opening and closing tag of Link, this is might be as composable as html itself.
 
-`<Link href="https://example.org">Everything, <b>including tags</b>, can be placed here</Link>`
+```jsx
+<Link href="https://example.org">Everything, <b>including tags</b>, can be placed here</Link>
+```
 
 ```jsx
 import {createElement} from 'complate-stream';
