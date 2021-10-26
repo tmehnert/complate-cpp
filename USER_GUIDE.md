@@ -652,7 +652,9 @@ applications and languages like C++, Java, JavaScript or Ruby. Let's start with 
 at [More realistic JSX for the examples above](#more-realistic-jsx-for-the-examples-above). Because of the **children**,
 which is the content between the opening and closing tag of Link, this is might be as composable as html itself.
 
-`<Link href="https://example.org">Everything, <b>including tags</b>, can be placed here</Link>`
+```jsx
+<Link href="https://example.org">Everything, <b>including tags</b>, can be placed here</Link>
+```
 
 ```jsx
 import {createElement} from 'complate-stream';
