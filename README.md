@@ -41,7 +41,9 @@ export default function Greeting({person}) {
 // Please read User Guide - Instantiate a Renderer, for more details.
 unique_ptr<Renderer> renderer;
 string html = renderer->renderToString("Greeting", Object{
-  {"name", "John Doe"}
+  { "person", Object{
+    { "name", "John Dow" }
+  }}
 });
 ```
 
