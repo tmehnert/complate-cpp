@@ -19,7 +19,10 @@ add_executable(${BINARY} main.cpp)
 add_subdirectory(fixtures)
 add_subdirectory(core)
 add_subdirectory(quickjs)
-add_subdirectory(v8)
+if (BUILD_V8_RENDERER)
+    add_subdirectory(v8)
+    target_compile_definitions(${BINARY} PRIVATE COMPLATE_V8_INCLUDED)
+endif()
 
 target_link_libraries(${BINARY} PUBLIC
     Catch2::Catch2

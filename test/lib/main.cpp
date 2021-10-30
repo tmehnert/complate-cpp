@@ -15,16 +15,20 @@
  */
 #define CATCH_CONFIG_RUNNER
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
+
+#ifdef COMPLATE_V8_INCLUDED
 #include <complate/v8/v8platform.h>
+using namespace complate;
+#endif
 
 #include "catch2/catch.hpp"
 
-using namespace complate;
-
 int main(int argc, char* argv[]) {
+#ifdef COMPLATE_V8_INCLUDED
   V8Platform platform;
   /* See v8platform.test.cpp why this has to be set */
   V8Platform::setFlags("--use-strict");
+#endif
 
   return Catch::Session().run(argc, argv);
 }
