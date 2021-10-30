@@ -23,6 +23,7 @@ set(SOURCES ${TEST_SOURCES})
 
 add_executable(${BINARY} ${TEST_SOURCES})
 
+target_include_directories(${BINARY} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/fixtures)
 target_link_libraries(${BINARY} PUBLIC
     Catch2::Catch2
     trompeloeil
