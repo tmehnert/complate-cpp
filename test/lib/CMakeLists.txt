@@ -15,7 +15,6 @@ set(BINARY ${CMAKE_PROJECT_NAME}-tests)
 find_package(Threads)
 include(Catch)
 
-include_directories(.)
 include_directories(SYSTEM /usr/include/v8 ${CMAKE_SOURCE_DIR}/deps/quickjs)
 
 file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.h *.cpp)

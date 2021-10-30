@@ -17,7 +17,7 @@
 #include <complate/quickjs/quickjsrenderer.h>
 
 #include "catch2/catch.hpp"
-#include "core/noopstream.h"
+#include "noopstream.h"
 #include "resources.h"
 #include "testdata.h"
 
