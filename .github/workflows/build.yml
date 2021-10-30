@@ -7,6 +7,7 @@ on:
     branches: [ main ]
 
 env:
+  CMAKE_BUILD_PARALLEL_LEVEL: 2
   BUILD_TESTS: on
   BUILD_EXAMPLE: on
 
@@ -77,8 +78,6 @@ jobs:
             -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}}
 
       - name: Build
-        env:
-          CMAKE_BUILD_PARALLEL_LEVEL: 2
         run: |
           cmake --build ${{github.workspace}}/build \
             --config ${{matrix.build_type}}
@@ -112,8 +111,6 @@ jobs:
             -G "MinGW Makefiles"
 
       - name: Build
-        env:
-          CMAKE_BUILD_PARALLEL_LEVEL: 2
         run: |
           cmake --build ${{github.workspace}}/build `
             --config ${{matrix.build_type}}
