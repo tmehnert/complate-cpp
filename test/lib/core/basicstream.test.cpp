@@ -14,9 +14,8 @@
  *  limitations under the License.
  */
 #include <complate/core/basicstream.h>
-#include <unistd.h>
 
-#include <cstdlib>
+#include <algorithm>
 #include <fstream>
 
 #include "catch2/catch.hpp"
@@ -26,9 +25,9 @@ using namespace complate;
 using namespace std;
 
 TEST_CASE("BasicStream", "[core]") {
-  char temporary[] = "/tmp/BasicStreamTest-XXXXXX";
-  close(mkstemp(temporary));
-  const std::string filename = temporary;
+  std::string filename = tmpnam(nullptr);
+  filename.erase(remove(filename.begin(), filename.end(), '\\'),
+                 filename.end());
   ofstream ofs = ofstream(filename);
   auto stream = make_shared<BasicStream>(ofs);
 
