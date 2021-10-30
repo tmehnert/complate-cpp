@@ -11,24 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-set(BINARY ${CMAKE_PROJECT_NAME}-tests)
-find_package(Threads)
-include(Catch)
-
-add_executable(${BINARY} main.cpp)
-add_subdirectory(fixtures)
-add_subdirectory(core)
-add_subdirectory(quickjs)
-add_subdirectory(v8)
-
-target_link_libraries(${BINARY} PUBLIC
-    Catch2::Catch2
-    trompeloeil
-    ${CMAKE_THREAD_LIBS_INIT}
-    PRIVATE "$<BUILD_INTERFACE:code_coverage>"
-    )
-target_compile_definitions(${BINARY}
-    PUBLIC TEST_RESOURCE_DIR="${CMAKE_SOURCE_DIR}/test/resources/"
-    )
-
-catch_discover_tests(${BINARY})
+file(GLOB_RECURSE V8_TEST_SOURCES LIST_DIRECTORIES false *.h *.cpp)
+target_sources(${BINARY} PRIVATE ${V8_TEST_SOURCES})
+target_link_libraries(${BINARY} PRIVATE complate::v8)
+target_include_directories(${BINARY} SYSTEM PRIVATE /usr/include/v8)
