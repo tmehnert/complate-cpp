@@ -7,12 +7,13 @@ on:
     branches: [ main ]
 
 env:
+  CMAKE_BUILD_PARALLEL_LEVEL: 2
   BUILD_TESTS: on
   BUILD_EXAMPLE: on
 
 jobs:
-  build:
-    name: ${{matrix.cc}}, ${{matrix.build_type}}
+  linux-build:
+    name: Linux, ${{matrix.cc}}, ${{matrix.build_type}}
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -77,12 +78,43 @@ jobs:
             -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}}
 
       - name: Build
-        env:
-          CMAKE_BUILD_PARALLEL_LEVEL: 2
         run: |
           cmake --build ${{github.workspace}}/build \
             --config ${{matrix.build_type}}
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{matrix.build_type}} --output-on-failure
+        run: ctest -C ${{matrix.build_type}} --output-on-failure --no-tests=error
+
+  windows-build:
+    name: Windows, mingw-${{matrix.mingw}}, ${{matrix.build_type}}
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        mingw:
+          - 8.5.0
+        build_type: [ Debug, Release ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: choco upgrade mingw -y --version=${{matrix.mingw}} --no-progress --allow-downgrade
+
+      - name: Configure CMake
+        run: |
+          cmake -B ${{github.workspace}}/build `
+            -DCMAKE_BUILD_TYPE=${{matrix.build_type}} `
+            -DBUILD_TESTS=${{env.BUILD_TESTS}} `
+            -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}} `
+            -DBUILD_V8_RENDERER=off `
+            -G "MinGW Makefiles"
+
+      - name: Build
+        run: |
+          cmake --build ${{github.workspace}}/build `
+            --config ${{matrix.build_type}}
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run: ctest -C ${{matrix.build_type}} --output-on-failure --no-tests=error

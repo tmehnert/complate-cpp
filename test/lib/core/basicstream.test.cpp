@@ -14,42 +14,31 @@
  *  limitations under the License.
  */
 #include <complate/core/basicstream.h>
-#include <unistd.h>
-
-#include <cstdlib>
-#include <fstream>
 
 #include "catch2/catch.hpp"
+#include "tempfile.h"
 
 using namespace Catch::Matchers;
 using namespace complate;
 using namespace std;
 
 TEST_CASE("BasicStream", "[core]") {
-  char temporary[] = "/tmp/BasicStreamTest-XXXXXX";
-  close(mkstemp(temporary));
-  const std::string filename = temporary;
-  ofstream ofs = ofstream(filename);
-  auto stream = make_shared<BasicStream>(ofs);
-
-  auto readFile = [&filename] {
-    ifstream ifs = ifstream(filename);
-    return string(istreambuf_iterator<char>(ifs), istreambuf_iterator<char>());
-  };
+  Tempfile tempfile;
+  auto stream = make_shared<BasicStream>(tempfile.ostream());
 
   SECTION("write") {
     SECTION("appending to stream") {
       stream->write("7 chars", 7);
       stream->flush();
-      REQUIRE_THAT(readFile(), Equals("7 chars"));
+      REQUIRE_THAT(tempfile.read(), Equals("7 chars"));
       stream->write(" + 11 chars", 11);
       stream->flush();
-      REQUIRE_THAT(readFile(), Equals("7 chars + 11 chars"));
+      REQUIRE_THAT(tempfile.read(), Equals("7 chars + 11 chars"));
     }
 
     SECTION("not flush the stream") {
       stream->write("7 chars", 7);
-      REQUIRE_THAT(readFile(), Equals(""));
+      REQUIRE_THAT(tempfile.read(), Equals(""));
     }
   }
 
@@ -57,26 +46,24 @@ TEST_CASE("BasicStream", "[core]") {
     SECTION("appending to stream with newline") {
       stream->writeln("7 chars", 7);
       stream->flush();
-      REQUIRE_THAT(readFile(), Equals("7 chars\n"));
+      REQUIRE_THAT(tempfile.read(), Equals("7 chars\n"));
       stream->writeln(" + 11 chars", 11);
       stream->flush();
-      REQUIRE_THAT(readFile(), Equals("7 chars\n + 11 chars\n"));
+      REQUIRE_THAT(tempfile.read(), Equals("7 chars\n + 11 chars\n"));
     }
 
     SECTION("not flush the stream") {
       stream->writeln("7 chars", 7);
-      REQUIRE_THAT(readFile(), Equals(""));
+      REQUIRE_THAT(tempfile.read(), Equals(""));
     }
   }
 
   SECTION("flush") {
     SECTION("flush the stream") {
       stream->write("7 chars", 7);
-      REQUIRE_THAT(readFile(), Equals(""));
+      REQUIRE_THAT(tempfile.read(), Equals(""));
       stream->flush();
-      REQUIRE_THAT(readFile(), Equals("7 chars"));
+      REQUIRE_THAT(tempfile.read(), Equals("7 chars"));
     }
   }
-
-  remove(filename.c_str());
 }

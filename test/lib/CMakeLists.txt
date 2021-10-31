@@ -15,21 +15,19 @@ set(BINARY ${CMAKE_PROJECT_NAME}-tests)
 find_package(Threads)
 include(Catch)
 
-include_directories(.)
-include_directories(SYSTEM /usr/include/v8 ${CMAKE_SOURCE_DIR}/deps/quickjs)
-
-file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.h *.cpp)
-set(SOURCES ${TEST_SOURCES})
-
-add_executable(${BINARY} ${TEST_SOURCES})
+add_executable(${BINARY} main.cpp)
+add_subdirectory(fixtures)
+add_subdirectory(core)
+add_subdirectory(quickjs)
+if (BUILD_V8_RENDERER)
+    add_subdirectory(v8)
+    target_compile_definitions(${BINARY} PRIVATE COMPLATE_V8_INCLUDED)
+endif()
 
 target_link_libraries(${BINARY} PUBLIC
     Catch2::Catch2
     trompeloeil
     ${CMAKE_THREAD_LIBS_INIT}
-    complate::core
-    complate::quickjs
-    complate::v8
     PRIVATE "$<BUILD_INTERFACE:code_coverage>"
     )
 target_compile_definitions(${BINARY}

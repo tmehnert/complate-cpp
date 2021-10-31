@@ -13,22 +13,30 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#define CATCH_CONFIG_RUNNER
-#define CATCH_CONFIG_ENABLE_BENCHMARKING
+#include "tempfile.h"
 
-#ifdef COMPLATE_V8_INCLUDED
-#include <complate/v8/v8platform.h>
-using namespace complate;
-#endif
+#include <unistd.h>
 
-#include "catch2/catch.hpp"
+using namespace std;
 
-int main(int argc, char* argv[]) {
-#ifdef COMPLATE_V8_INCLUDED
-  V8Platform platform;
-  /* See v8platform.test.cpp why this has to be set */
-  V8Platform::setFlags("--use-strict");
-#endif
+Tempfile::Tempfile() : m_filename(createTempfile()), m_ofstream(m_filename) {}
 
-  return Catch::Session().run(argc, argv);
+Tempfile::~Tempfile() {
+  if (!m_filename.empty()) {
+    remove(m_filename.c_str());
+  }
+}
+
+string Tempfile::read() const {
+  using istreambuf = istreambuf_iterator<char>;
+  ifstream ifs = ifstream(m_filename);
+  return {istreambuf(ifs), istreambuf()};
+}
+
+ostream& Tempfile::ostream() { return m_ofstream; }
+
+string Tempfile::createTempfile() {
+  char temporary[] = "Tempfile-XXXXXX";
+  close(mkstemp(temporary));
+  return temporary;
 }

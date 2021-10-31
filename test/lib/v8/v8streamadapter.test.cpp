@@ -18,7 +18,7 @@
 #include <v8.h>
 
 #include "catch2/catch.hpp"
-#include "core/stream.mock.h"
+#include "stream.mock.h"
 
 using namespace trompeloeil;
 using namespace complate;

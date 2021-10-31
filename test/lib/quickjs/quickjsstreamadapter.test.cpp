@@ -17,7 +17,7 @@
 
 #include "../../../lib/quickjs/quickjshelper.h"
 #include "catch2/catch.hpp"
-#include "core/stream.mock.h"
+#include "stream.mock.h"
 #include "quickjs.h"
 
 using namespace trompeloeil;

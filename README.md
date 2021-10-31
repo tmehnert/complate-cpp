@@ -118,8 +118,14 @@ example/complate-example
 
 The library is tested with following compilers.
 
-* GCC 7 - 10 (on Ubuntu 20.04)
-* Clang 7 - 12 (on Ubuntu 20.04)
+#### Ubuntu Linux
+
+* GCC 7 - 10
+* Clang 7 - 12
+
+#### Microsoft Windows
+
+* MinGW 8.5.0 (QuickJs only, use -DBUILD_V8_RENDERER=off)
 
 ### Dependencies
 
