@@ -99,7 +99,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install Dependencies
-        run: choco upgrade mingw -y --version=${{matrix.mingw}} --no-progress
+        run: choco upgrade mingw -y --version=${{matrix.mingw}} --no-progress --allow-downgrade
 
       - name: Configure CMake
         run: |
