@@ -28,7 +28,7 @@ jobs:
 
       - name: Test FetchContent
         working-directory: ${{github.workspace}}/build
-        run: ctest --output-on-failure
+        run: ctest --output-on-failure --no-tests=error
 
   cmake-findpackage:
     name: "CMake FindPackage"
@@ -61,4 +61,4 @@ jobs:
 
       - name: Test FindPackage
         working-directory: ${{github.workspace}}/build
-        run: ctest --output-on-failure
+        run: ctest --output-on-failure --no-tests=error

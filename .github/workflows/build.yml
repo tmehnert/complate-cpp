@@ -84,7 +84,7 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{matrix.build_type}} --output-on-failure
+        run: ctest -C ${{matrix.build_type}} --output-on-failure --no-tests=error
 
   windows-build:
     name: Windows, mingw-${{matrix.mingw}}, ${{matrix.build_type}}
@@ -117,4 +117,4 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run: ctest -C ${{matrix.build_type}} --output-on-failure
+        run: ctest -C ${{matrix.build_type}} --output-on-failure --no-tests=error
