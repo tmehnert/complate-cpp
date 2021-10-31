@@ -97,6 +97,10 @@ jobs:
         build_type: [ Debug, Release ]
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/cache@v2
+        with:
+          path: C:\ProgramData\chocolatey\lib\mingw
+          key: ${{runner.os}}-chocolatey-mingw-${{matrix.mingw}}
 
       - name: Install Dependencies
         run: choco upgrade mingw -y --version=${{matrix.mingw}} --no-progress --allow-downgrade
