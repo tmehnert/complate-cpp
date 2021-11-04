@@ -1,4 +1,5 @@
 deps/quickjs/tests/* linguist-vendored
 deps/quickjs/examples/* linguist-vendored
 deps/quickjs/doc/* linguist-vendored
+deps/quickjs/*.js linguist-vendored
 test/resources/* linguist-vendored
