@@ -21,6 +21,8 @@ namespace complate {
 
 class NoopRenderer : public Renderer {
 public:
+  ~NoopRenderer() override = default;
+
   void render(const std::string &, const Object &, Stream &) override{};
   void render(const std::string &, const std::string &, Stream &) override{};
 };
