@@ -21,7 +21,7 @@
 
 #include "quickjsconsole.h"
 #include "quickjshelper.h"
-#include "quickjsmapper.h"
+#include "quickjsrenderercontext.h"
 #include "quickjsstreamadapter.h"
 
 using namespace complate;
@@ -33,14 +33,14 @@ public:
                 Object bindings)
       : m_runtime(JS_NewRuntime()),
         m_context(JS_NewContext(m_runtime)),
+        m_rendererContext(m_context, prototypes),
         m_global(JS_GetGlobalObject(m_context)),
         m_render(evaluateSource(m_context, source)),
         m_streamAdapter(m_context),
-        m_mapper(m_context, prototypes),
         m_bindings(move(bindings)) {
     JS_SetMaxStackSize(m_runtime, NO_STACK_LIMIT);
     ensureConsoleDefined(m_bindings);
-    m_mapper.fromObject(m_bindings, m_global);
+    m_rendererContext.mapper().fromObject(m_bindings, m_global);
   }
 
   ~Impl() {
@@ -53,7 +53,7 @@ public:
   void render(const string &view, const Object &parameters, Stream &stream) {
     lock_guard<mutex> guard(m_mutex);
     JS_UpdateStackTop(m_runtime);
-    render(view, m_mapper.fromObject(parameters), stream);
+    render(view, m_rendererContext.mapper().fromObject(parameters), stream);
   }
 
   void render(const string &view, const string &parameters, Stream &stream) {
@@ -74,10 +74,10 @@ private:
   mutex m_mutex;
   JSRuntime *m_runtime;
   JSContext *m_context;
+  QuickJsRendererContext m_rendererContext;
   JSValue m_global;
   JSValue m_render;
   QuickJsStreamAdapter m_streamAdapter;
-  QuickJsMapper m_mapper;
   Object m_bindings;
 
   void render(const string &view, JSValue parameters, Stream &stream) {

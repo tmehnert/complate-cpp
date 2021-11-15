@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#include "../../../lib/quickjs/quickjsmapper.h"
+#include "../../../lib/quickjs/quickjsrenderercontext.h"
 
 #include <complate/core/prototypebuilder.h>
 
@@ -29,7 +29,8 @@ using namespace std;
 TEST_CASE("QuickJsMapper", "[quickjs]") {
   JSRuntime *runtime = JS_NewRuntime();
   JSContext *context = JS_NewContext(runtime);
-  QuickJsMapper mapper(context, Testdata::prototypes());
+  QuickJsRendererContext rctx(context, Testdata::prototypes());
+  auto &mapper = rctx.mapper();
   JSValue v;
 
   SECTION("fromObject") {

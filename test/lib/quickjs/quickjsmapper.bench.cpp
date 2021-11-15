@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
-#include "../../../lib/quickjs/quickjsmapper.h"
+#include "../../../lib/quickjs/quickjsrenderercontext.h"
 
 #include "catch2/catch.hpp"
 #include "quickjs.h"
@@ -26,7 +26,8 @@ using namespace std;
 TEST_CASE("QuickjsMapperBenchmark", "[quickjs][.benchmark]") {
   JSRuntime *runtime = JS_NewRuntime();
   JSContext *context = JS_NewContext(runtime);
-  QuickJsMapper mapper(context, Testdata::prototypes());
+  QuickJsRendererContext rctx(context, Testdata::prototypes());
+  auto &mapper = rctx.mapper();
 
   const Object parameters = Testdata::forMapperBenchmark();
 

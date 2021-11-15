@@ -15,18 +15,12 @@
  */
 #include "quickjsmapper.h"
 
-#include "quickjsunmapper.h"
+#include "quickjsrenderercontext.h"
 
 using namespace complate;
 using namespace std;
 
-QuickJsMapper::QuickJsMapper(JSContext *context,
-                             const std::vector<Prototype> &prototypes)
-    : m_context(context), m_prototypeRegistry(context) {
-  for (const Prototype &prototype : prototypes) {
-    m_prototypeRegistry.add(prototype);
-  }
-}
+QuickJsMapper::QuickJsMapper(JSContext *context) : m_context(context) {}
 
 // NOLINTNEXTLINE(misc-no-recursion)
 JSValue QuickJsMapper::fromObject(const Object &object) {
@@ -84,11 +78,13 @@ JSValue QuickJsMapper::fromFunction(const Function &func) {
 }
 
 JSValue QuickJsMapper::fromProxy(const Proxy &proxy) {
-  return m_prototypeRegistry.newInstanceOf(proxy);
+  auto rctx = QuickJsRendererContext::get(m_context);
+  return rctx->prototypeRegistry().newInstanceOf(proxy);
 }
 
 JSValue QuickJsMapper::fromProxyWeak(const ProxyWeak &proxyWeak) {
-  return m_prototypeRegistry.newInstanceOf(proxyWeak);
+  auto rctx = QuickJsRendererContext::get(m_context);
+  return rctx->prototypeRegistry().newInstanceOf(proxyWeak);
 }
 
 JSValue QuickJsMapper::valueFrom(Bool d) { return JS_NewBool(m_context, d); }
@@ -112,12 +108,11 @@ JSValue QuickJsMapper::valueFrom(const String &text) {
 
 JSValue QuickJsMapper::proxy(JSContext *ctx, JSValue, int argc, JSValue *argv,
                              int, JSValue *data) {
-  QuickJsMapper mapper(ctx, {});
-  QuickJsUnmapper unmapper(ctx);
+  auto rctx = QuickJsRendererContext::get(ctx);
   Array args;
   for (int i = 0; i < argc; ++i) {
-    args.emplace_back(unmapper.fromValue(argv[i]));
+    args.emplace_back(rctx->unmapper().fromValue(argv[i]));
   }
   auto fn = static_cast<Function *>(JS_GetOpaque(*data, 1));
-  return mapper.fromValue((*fn).apply(args));
+  return rctx->mapper().fromValue((*fn).apply(args));
 }

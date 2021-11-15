@@ -15,8 +15,7 @@
  */
 #include "quickjsprototyperegistry.h"
 
-#include "quickjsmapper.h"
-#include "quickjsunmapper.h"
+#include "quickjsrenderercontext.h"
 
 using namespace std;
 using namespace complate;
@@ -84,17 +83,16 @@ JSValue QuickJsPrototypeRegistry::newInstanceOf(const string &name,
 JSValue QuickJsPrototypeRegistry::methodCall(JSContext *ctx, JSValue this_val,
                                              int argc, JSValue *argv,
                                              int magic) {
-  QuickJsMapper mapper(ctx, {});
-  QuickJsUnmapper unmapper(ctx);
+  auto rctx = QuickJsRendererContext::get(ctx);
   Array args;
   for (int i = 0; i < argc; ++i) {
-    args.emplace_back(unmapper.fromValue(argv[i]));
+    args.emplace_back(rctx->unmapper().fromValue(argv[i]));
   }
   void *proxy = JS_VALUE_GET_PTR(JS_GetPropertyUint32(ctx, this_val, 0));
   JSValue m = JS_GetPropertyUint32(ctx, this_val, magic);
   auto method = static_cast<Method *>(JS_VALUE_GET_PTR(m));
 
-  return mapper.fromValue(method->apply(proxy, args));
+  return rctx->mapper().fromValue(method->apply(proxy, args));
 }
 
 JSCFunctionListEntry QuickJsPrototypeRegistry::entry(const string &name,
@@ -124,23 +122,23 @@ JSCFunctionListEntry QuickJsPrototypeRegistry::getset(const string &name,
 
 JSValue QuickJsPrototypeRegistry::getter(JSContext *ctx, JSValue this_val,
                                          int magic) {
-  QuickJsMapper mapper(ctx, {});
+  auto rctx = QuickJsRendererContext::get(ctx);
 
   void *proxy = JS_VALUE_GET_PTR(JS_GetPropertyUint32(ctx, this_val, 0));
   JSValue m = JS_GetPropertyUint32(ctx, this_val, magic);
   auto property = static_cast<Property *>(JS_VALUE_GET_PTR(m));
 
-  return mapper.fromValue(property->get(proxy));
+  return rctx->mapper().fromValue(property->get(proxy));
 }
 
 JSValue QuickJsPrototypeRegistry::setter(JSContext *ctx, JSValue this_val,
                                          JSValue val, int magic) {
-  QuickJsUnmapper unmapper(ctx);
+  auto rctx = QuickJsRendererContext::get(ctx);
 
   void *proxy = JS_VALUE_GET_PTR(JS_GetPropertyUint32(ctx, this_val, 0));
   JSValue m = JS_GetPropertyUint32(ctx, this_val, magic);
   auto property = static_cast<Property *>(JS_VALUE_GET_PTR(m));
 
-  property->set(proxy, unmapper.fromValue(val));
+  property->set(proxy, rctx->unmapper().fromValue(val));
   return JS_UNDEFINED;
 }
