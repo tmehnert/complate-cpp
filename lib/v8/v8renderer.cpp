@@ -20,7 +20,7 @@
 #include <utility>
 
 #include "v8helper.h"
-#include "v8mapper.h"
+#include "v8renderercontext.h"
 #include "v8streamadapter.h"
 
 using namespace complate;
@@ -31,8 +31,8 @@ public:
   explicit Impl(const string &source, const std::vector<Prototype> &prototypes,
                 Object bindings)
       : m_isolate(createIsolate()),
+        m_rendererContext(m_isolate, prototypes),
         m_streamAdapter(m_isolate),
-        m_mapper(m_isolate, prototypes),
         m_bindings(move(bindings)) {
     v8::Locker locker(m_isolate);
     v8::HandleScope handle_scope(m_isolate);
@@ -41,7 +41,7 @@ public:
     auto ctx = context();
     v8::Context::Scope context_scope(ctx);
 
-    m_mapper.fromObject(m_bindings, ctx->Global());
+    m_rendererContext.mapper().fromObject(m_bindings, ctx->Global());
 
     v8::Local<v8::String> src = V8Helper::newString(m_isolate, source);
     v8::TryCatch tryCatch(m_isolate);
@@ -74,7 +74,7 @@ public:
     auto ctx = context();
     v8::Context::Scope context_scope(ctx);
 
-    render(view, m_mapper.fromObject(parameters), stream);
+    render(view, m_rendererContext.mapper().fromObject(parameters), stream);
   }
 
   void render(const string &view, const string &parameters, Stream &stream) {
@@ -96,8 +96,8 @@ private:
   v8::Isolate *m_isolate;
   v8::Persistent<v8::Function> m_render;
   v8::Persistent<v8::Context> m_context;
+  V8RendererContext m_rendererContext;
   V8StreamAdapter m_streamAdapter;
-  V8Mapper m_mapper;
   Object m_bindings;
 
   v8::Local<v8::Context> context() { return m_context.Get(m_isolate); }

@@ -15,20 +15,14 @@
  */
 #pragma once
 
-#include <complate/core/prototype.h>
 #include <complate/core/value.h>
 #include <v8.h>
-
-#include <vector>
-
-#include "v8prototyperegistry.h"
 
 namespace complate {
 
 class V8Mapper {
 public:
-  explicit V8Mapper(v8::Isolate *isolate,
-                    const std::vector<Prototype> &prototypes);
+  explicit V8Mapper(v8::Isolate *isolate);
 
   v8::Local<v8::Object> fromObject(const Object &object);
   v8::Local<v8::Object> fromObject(const Object &object,
@@ -41,7 +35,6 @@ public:
 
 private:
   v8::Isolate *m_isolate;
-  V8PrototypeRegistry m_prototypeRegistry;
 
   inline v8::Local<v8::Value> valueFrom(Null);
   inline v8::Local<v8::Value> valueFrom(Bool d);

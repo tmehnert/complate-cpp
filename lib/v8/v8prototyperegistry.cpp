@@ -17,8 +17,7 @@
 
 #include <functional>
 
-#include "v8mapper.h"
-#include "v8unmapper.h"
+#include "v8renderercontext.h"
 
 using namespace std;
 using namespace complate;
@@ -78,12 +77,11 @@ v8::Local<v8::Value> V8PrototypeRegistry::newInstanceOf(const string &name,
 
 void V8PrototypeRegistry::methodCall(
     const v8::FunctionCallbackInfo<v8::Value> &info) {
-  V8Mapper mapper(info.GetIsolate(), {});
-  V8Unmapper unmapper(info.GetIsolate());
+  auto rctx = V8RendererContext::get(info.GetIsolate());
 
   Array args;
   for (int i = 0; i < info.Length(); ++i) {
-    args.emplace_back(unmapper.fromValue(info[i]));
+    args.emplace_back(rctx->unmapper().fromValue(info[i]));
   }
 
   auto pptr =
@@ -91,30 +89,30 @@ void V8PrototypeRegistry::methodCall(
   auto data = v8::Local<v8::External>::Cast(info.Data())->Value();
   auto method = static_cast<Method *>(data);
 
-  info.GetReturnValue().Set(mapper.fromValue(method->apply(pptr, args)));
+  info.GetReturnValue().Set(rctx->mapper().fromValue(method->apply(pptr, args)));
 }
 
 void V8PrototypeRegistry::getter(
     v8::Local<v8::String>, const v8::PropertyCallbackInfo<v8::Value> &info) {
-  V8Mapper mapper(info.GetIsolate(), {});
+  auto rctx = V8RendererContext::get(info.GetIsolate());
 
   auto pptr =
       v8::Local<v8::External>::Cast(info.This()->GetInternalField(0))->Value();
   auto data = v8::Local<v8::External>::Cast(info.Data())->Value();
   auto prop = static_cast<Property *>(data);
 
-  info.GetReturnValue().Set(mapper.fromValue(prop->get(pptr)));
+  info.GetReturnValue().Set(rctx->mapper().fromValue(prop->get(pptr)));
 }
 
 void V8PrototypeRegistry::setter(v8::Local<v8::String>,
                                  v8::Local<v8::Value> value,
                                  const v8::PropertyCallbackInfo<void> &info) {
-  V8Unmapper unmapper(info.GetIsolate());
+  auto rctx = V8RendererContext::get(info.GetIsolate());
 
   auto pptr =
       v8::Local<v8::External>::Cast(info.This()->GetInternalField(0))->Value();
   auto data = v8::Local<v8::External>::Cast(info.Data())->Value();
   auto prop = static_cast<Property *>(data);
 
-  prop->set(pptr, unmapper.fromValue(value));
+  prop->set(pptr, rctx->unmapper().fromValue(value));
 }
