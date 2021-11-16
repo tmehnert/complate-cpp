@@ -20,6 +20,7 @@ using namespace std;
 
 QuickJsUnmapper::QuickJsUnmapper(JSContext *context) : m_context(context) {}
 
+// NOLINTNEXTLINE(misc-no-recursion)
 Value QuickJsUnmapper::fromValue(JSValue value) {
   if (JS_IsString(value)) {
     size_t len;
@@ -51,6 +52,7 @@ Value QuickJsUnmapper::fromValue(JSValue value) {
   return {};
 }
 
+// NOLINTNEXTLINE(misc-no-recursion)
 Array QuickJsUnmapper::fromArray(JSValue arr) {
   JSValue l = JS_GetPropertyStr(m_context, arr, "length");
   uint32_t length;
@@ -69,6 +71,7 @@ Array QuickJsUnmapper::fromArray(JSValue arr) {
   return array;
 }
 
+// NOLINTNEXTLINE(misc-no-recursion)
 Object QuickJsUnmapper::fromObject(JSValue obj) {
   static const int flags = JS_GPN_STRING_MASK | JS_GPN_ENUM_ONLY;
   JSPropertyEnum *props = nullptr;
