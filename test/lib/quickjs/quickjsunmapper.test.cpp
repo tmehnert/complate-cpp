@@ -95,7 +95,7 @@ TEST_CASE("QuickJsUnmapper", "[quickjs]") {
       REQUIRE(number.exactly<double>() == Approx(3.1415));
     }
 
-    SECTION("unmap text") {
+    SECTION("unmap string") {
       value = mapper.fromValue("Hello World!");
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<String>());
