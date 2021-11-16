@@ -42,7 +42,27 @@ Value QuickJsUnmapper::fromValue(JSValue value) {
     return JS_ToBool(m_context, value) != 0;
   } else if (JS_IsNull(value)) {
     return nullptr;
+  } else if (JS_IsArray(m_context, value)) {
+    return fromArray(value);
   }
 
   return {};
+}
+
+Array QuickJsUnmapper::fromArray(JSValue arr) {
+  JSValue l = JS_GetPropertyStr(m_context, arr, "length");
+  uint32_t length;
+  JS_ToUint32(m_context, &length, l);
+  JS_FreeValue(m_context, l);
+
+  Array array;
+  array.reserve(length);
+
+  for (uint32_t i = 0; i < length; i++) {
+    JSValue item = JS_GetPropertyUint32(m_context, arr, i);
+    array.push_back(fromValue(item));
+    JS_FreeValue(m_context, item);
+  }
+
+  return array;
 }

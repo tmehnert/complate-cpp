@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 #include "../../../lib/quickjs/quickjsrenderercontext.h"
-
 #include "catch2/catch.hpp"
 #include "quickjs.h"
 
@@ -101,6 +100,22 @@ TEST_CASE("QuickJsUnmapper", "[quickjs]") {
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<String>());
       REQUIRE(unmapped.exactly<String>() == "Hello World!");
+    }
+
+    SECTION("unmap array") {
+      value = mapper.fromValue(Array{1, true, "foo"});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Array>());
+      REQUIRE(unmapped.exactly<Array>() == Array{1, true, "foo"});
+    }
+  }
+
+  SECTION("fromArray") {
+    SECTION("unmap empty") {
+      value = mapper.fromValue(Array{});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Array>());
+      REQUIRE(unmapped.exactly<Array>().empty());
     }
   }
 

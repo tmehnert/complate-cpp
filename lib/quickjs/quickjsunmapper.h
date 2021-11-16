@@ -29,5 +29,7 @@ public:
 
 private:
   JSContext *m_context;
+
+  Array fromArray(JSValue arr);
 };
 }  // namespace complate
