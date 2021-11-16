@@ -31,5 +31,6 @@ private:
   JSContext *m_context;
 
   Array fromArray(JSValue arr);
+  Object fromObject(JSValue arr);
 };
 }  // namespace complate
