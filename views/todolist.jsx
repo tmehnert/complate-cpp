@@ -18,7 +18,7 @@ import {createElement} from 'complate-stream';
 import Layout from './components/layout';
 
 export default function TodoList({todos}) {
-    // console will not print anythgin. Add an binding 'console' to use.
+    // console will not print anything. Add an binding 'console' to use.
     console.debug("some debug msg")
     console.log("some log msg")
     console.error("some error msg")

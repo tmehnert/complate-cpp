@@ -30,7 +30,7 @@ public:
 
 private:
   std::string m_what;
-  std::string m_describtion;
+  std::string m_description;
   std::string m_needToBeDoneIn;
   bool m_veryLate;
   std::string m_updateLink;

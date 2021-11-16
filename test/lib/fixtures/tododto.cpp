@@ -20,14 +20,14 @@ using namespace std;
 TodoDto::TodoDto(string what, string description, string needToBeDoneIn,
                  bool veryLate, string updateLink)
     : m_what(move(what)),
-      m_describtion(move(description)),
+      m_description(move(description)),
       m_needToBeDoneIn(move(needToBeDoneIn)),
       m_veryLate(veryLate),
       m_updateLink(move(updateLink)) {}
 
 const string &TodoDto::what() const { return m_what; }
 
-const string &TodoDto::description() const { return m_describtion; }
+const string &TodoDto::description() const { return m_description; }
 
 bool TodoDto::veryLate() const { return m_veryLate; }
 
