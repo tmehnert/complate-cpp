@@ -28,5 +28,7 @@ public:
 
 private:
   v8::Isolate *m_isolate;
+
+  Array fromArray(v8::Local<v8::Array> arr);
 };
 }  // namespace complate

@@ -100,5 +100,21 @@ TEST_CASE("V8Unmapper", "[v8]") {
       REQUIRE(unmapped.holds<String>());
       REQUIRE(unmapped.exactly<String>() == "Hello World!");
     }
+
+    SECTION("unmap array") {
+      auto value = mapper.fromValue(Array{1, true, "foo"});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Array>());
+      REQUIRE(unmapped.exactly<Array>() == Array{1, true, "foo"});
+    }
+  }
+
+  SECTION("fromArray") {
+    SECTION("unmap empty") {
+      auto value = mapper.fromValue(Array{});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Array>());
+      REQUIRE(unmapped.exactly<Array>().empty());
+    }
   }
 }

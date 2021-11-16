@@ -20,6 +20,7 @@ using namespace std;
 
 V8Unmapper::V8Unmapper(v8::Isolate *isolate) : m_isolate(isolate) {}
 
+// NOLINTNEXTLINE(misc-no-recursion)
 Value V8Unmapper::fromValue(v8::Local<v8::Value> value) {
   auto context = m_isolate->GetCurrentContext();
 
@@ -41,7 +42,21 @@ Value V8Unmapper::fromValue(v8::Local<v8::Value> value) {
     return value->BooleanValue(context).ToChecked();
   } else if (value->IsNull()) {
     return nullptr;
+  } else if (value->IsArray()) {
+    return fromArray(value.As<v8::Array>());
   }
 
   return {};
+}
+
+// NOLINTNEXTLINE(misc-no-recursion)
+Array V8Unmapper::fromArray(v8::Local<v8::Array> arr) {
+  Array array;
+  array.reserve(arr->Length());
+
+  for (uint32_t i = 0; i < arr->Length(); i++) {
+    array.push_back(fromValue(arr->Get(i)));
+  }
+
+  return array;
 }
