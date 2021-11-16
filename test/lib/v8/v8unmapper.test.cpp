@@ -107,6 +107,14 @@ TEST_CASE("V8Unmapper", "[v8]") {
       REQUIRE(unmapped.holds<Array>());
       REQUIRE(unmapped.exactly<Array>() == Array{1, true, "foo"});
     }
+
+    SECTION("unmap object") {
+      auto obj = Object{{"foo", "bar"}, {"baz", 23}};
+      auto value = mapper.fromValue(obj);
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Object>());
+      REQUIRE(unmapped.exactly<Object>() == obj);
+    }
   }
 
   SECTION("fromArray") {
@@ -115,6 +123,16 @@ TEST_CASE("V8Unmapper", "[v8]") {
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<Array>());
       REQUIRE(unmapped.exactly<Array>().empty());
+    }
+  }
+
+
+  SECTION("fromObject") {
+    SECTION("unmap empty") {
+      auto value = mapper.fromValue(Object{});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Object>());
+      REQUIRE(unmapped.exactly<Object>().empty());
     }
   }
 }
