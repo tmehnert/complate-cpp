@@ -47,5 +47,5 @@ QuickJsPrototypeRegistry& QuickJsRendererContext::prototypeRegistry() {
 }
 
 QuickJsRendererContext* QuickJsRendererContext::get(JSContext* ctx) {
-  return static_cast<QuickJsRendererContext *>(JS_GetContextOpaque(ctx));;
+  return static_cast<QuickJsRendererContext *>(JS_GetContextOpaque(ctx));
 }
