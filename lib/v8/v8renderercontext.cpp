@@ -44,6 +44,8 @@ V8PrototypeRegistry& V8RendererContext::prototypeRegistry() {
   return m_prototypeRegistry;
 }
 
+V8ProxyHolder& V8RendererContext::proxyHolder() { return m_proxyHolder; }
+
 V8RendererContext* V8RendererContext::get(v8::Isolate* isolate) {
   return static_cast<V8RendererContext*>(
       isolate->GetData(V8RendererContext::DATA_SLOT));

@@ -53,6 +53,7 @@ void V8PrototypeRegistry::add(const Prototype &prototype) {
 
 v8::Local<v8::Value> V8PrototypeRegistry::newInstanceOf(
     const Proxy &proxy) const {
+  V8RendererContext::get(m_isolate)->proxyHolder().add(proxy);
   return newInstanceOf(proxy.name(), proxy.ptr().get());
 }
 

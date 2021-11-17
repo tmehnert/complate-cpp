@@ -22,6 +22,7 @@
 #include "v8helper.h"
 #include "v8renderercontext.h"
 #include "v8streamadapter.h"
+#include "v8proxydeleter.h"
 
 using namespace complate;
 using namespace std;
@@ -34,6 +35,7 @@ public:
         m_rendererContext(m_isolate, prototypes),
         m_streamAdapter(m_isolate),
         m_bindings(move(bindings)) {
+    V8ProxyDeleter proxyDeleter(m_rendererContext.proxyHolder());
     v8::Locker locker(m_isolate);
     v8::HandleScope handle_scope(m_isolate);
     m_context.Reset(m_isolate, v8::Context::New(m_isolate));
@@ -69,6 +71,7 @@ public:
   ~Impl() { m_isolate->Dispose(); }
 
   void render(const string &view, const Object &parameters, Stream &stream) {
+    V8ProxyDeleter proxyDeleter(m_rendererContext.proxyHolder());
     v8::Locker locker(m_isolate);
     v8::HandleScope handle_scope(m_isolate);
     auto ctx = context();

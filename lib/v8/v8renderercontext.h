@@ -20,6 +20,7 @@
 #include "v8mapper.h"
 #include "v8prototyperegistry.h"
 #include "v8unmapper.h"
+#include "v8proxyholder.h"
 
 namespace complate {
 
@@ -35,6 +36,7 @@ public:
   [[nodiscard]] V8Mapper &mapper();
   [[nodiscard]] V8Unmapper &unmapper();
   [[nodiscard]] V8PrototypeRegistry &prototypeRegistry();
+  [[nodiscard]] V8ProxyHolder &proxyHolder();
 
   static V8RendererContext *get(v8::Isolate *isolate);
 
@@ -43,5 +45,6 @@ private:
   V8Mapper m_mapper;
   V8Unmapper m_unmapper;
   V8PrototypeRegistry m_prototypeRegistry;
+  V8ProxyHolder m_proxyHolder;
 };
 }  // namespace complate
