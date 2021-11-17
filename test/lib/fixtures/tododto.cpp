@@ -18,11 +18,12 @@
 using namespace std;
 
 TodoDto::TodoDto(string what, string description, string updateLink,
-                 TimespanDto timespan)
+                 TimespanDto timespan, AssigneeDto assignee)
     : m_what(move(what)),
       m_description(move(description)),
       m_updateLink(move(updateLink)),
-      m_timespan(move(timespan)) {}
+      m_timespan(move(timespan)),
+      m_assignee(move(assignee)) {}
 
 const string &TodoDto::what() const { return m_what; }
 
@@ -31,3 +32,5 @@ const string &TodoDto::description() const { return m_description; }
 const string &TodoDto::updateLink() const { return m_updateLink; }
 
 const TimespanDto &TodoDto::timespan() const { return m_timespan; }
+
+const AssigneeDto &TodoDto::assignee() const { return m_assignee; }

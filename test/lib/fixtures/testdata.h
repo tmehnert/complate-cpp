@@ -30,6 +30,7 @@ public:
   static complate::Prototype prototypeForAssets();
   static complate::Prototype prototypeForStdString();
   static complate::Prototype prototypeForTimespanDto();
+  static complate::Prototype prototypeForAssigneeDto();
   static complate::Prototype prototypeForTodoDto();
   static std::vector<complate::Prototype> prototypes();
 };

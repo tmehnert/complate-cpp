@@ -18,20 +18,23 @@
 #include <string>
 
 #include "timespandto.h"
+#include "assigneedto.h"
 
 class TodoDto {
 public:
   TodoDto(std::string what, std::string description, std::string updateLink,
-          TimespanDto timespan);
+          TimespanDto timespan, AssigneeDto assignee);
 
   [[nodiscard]] const std::string &what() const;
   [[nodiscard]] const std::string &description() const;
   [[nodiscard]] const std::string &updateLink() const;
   [[nodiscard]] const TimespanDto &timespan() const;
+  [[nodiscard]] const AssigneeDto &assignee() const;
 
 private:
   std::string m_what;
   std::string m_description;
   std::string m_updateLink;
   TimespanDto m_timespan;
+  AssigneeDto m_assignee;
 };

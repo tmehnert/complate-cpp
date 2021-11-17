@@ -20,6 +20,7 @@
 #include <algorithm>
 
 #include "assets.h"
+#include "assigneedto.h"
 #include "timespandto.h"
 #include "tododto.h"
 
@@ -39,17 +40,20 @@ Object Testdata::bindings() {
 Object Testdata::forTodoList() {
   return {
       {"todos",
-       Array{Object{
-                 {"what", "Change the tires of your car"},
-                 {"description", "You stored the tires at your mom's house."},
-                 {"updateLink", "https://example.org/todos/4/update"},
-                 {"timespan",
-                  Object{{"amount", 9}, {"unit", "days"}, {"veryLate", true}}}},
-             Proxy{"TodoDto", make_shared<TodoDto>(
-                                  "Book a hotel for next summer",
-                                  "Hopefully our situation is then better.",
-                                  "https://example.org/todos/5/update",
-                                  TimespanDto(11, "months", false))}}}};
+       Array{
+           Object{
+               {"what", "Change the tires of your car"},
+               {"description", "You stored the tires at your mom's house."},
+               {"updateLink", "https://example.org/todos/4/update"},
+               {"timespan",
+                Object{{"amount", 9}, {"unit", "days"}, {"veryLate", true}}},
+               {"assignee", Object{{"forename", "John"}, {"lastname", "Doe"}}}},
+           Proxy{"TodoDto",
+                 make_shared<TodoDto>("Book a hotel for next summer",
+                                      "Hopefully our situation is then better.",
+                                      "https://example.org/todos/5/update",
+                                      TimespanDto(11, "months", false),
+                                      AssigneeDto("Jane", "Doe"))}}}};
 }
 
 string Testdata::forTodoListViewAsJson() {
@@ -64,6 +68,10 @@ string Testdata::forTodoListViewAsJson() {
             "amount": 9,
             "unit": "days",
             "veryLate": true
+          },
+          "assignee": {
+            "forename": "John",
+            "lastname": "Doe"
           }
         },
         {
@@ -74,6 +82,10 @@ string Testdata::forTodoListViewAsJson() {
             "amount": 11,
             "unit": "months",
             "veryLate": false
+          },
+          "assignee": {
+            "forename": "Jane",
+            "lastname": "Doe"
           }
         }
       ]
@@ -87,7 +99,8 @@ Object Testdata::forTodoListRenderBenchmark(int count) {
              {"description", "You stored the tires at your mom's house."},
              {"updateLink", "https://exmaple.org/todos/4/update"},
              {"timespan",
-              Object{{"amount", 9}, {"unit", "days"}, {"veryLate", true}}}};
+              Object{{"amount", 9}, {"unit", "days"}, {"veryLate", true}}},
+             {"assignee", Object{{"forename", "John"}, {"lastname", "Doe"}}}};
 
   return Object{{"todos", Array(count, todo)}};
 }
@@ -143,6 +156,13 @@ Prototype Testdata::prototypeForTimespanDto() {
       .build();
 }
 
+Prototype Testdata::prototypeForAssigneeDto() {
+  return PrototypeBuilder<AssigneeDto>("AssigneeDto")
+      .property("forename", &AssigneeDto::forename)
+      .property("lastname", &AssigneeDto::lastname)
+      .build();
+}
+
 Prototype Testdata::prototypeForTodoDto() {
   return PrototypeBuilder<TodoDto>("TodoDto")
       .property("what", &TodoDto::what)
@@ -152,10 +172,16 @@ Prototype Testdata::prototypeForTodoDto() {
                            [](const TodoDto &todo) {
                              return ProxyWeak("TimespanDto", todo.timespan());
                            })
+      .property<Proxy>("assignee",
+                       [](const TodoDto &todo) {
+                         return Proxy("AssigneeDto", make_shared<AssigneeDto>(
+                                                         todo.assignee()));
+                       })
       .build();
 }
 
 vector<Prototype> Testdata::prototypes() {
   return {prototypeForAssets(), prototypeForStdString(),
-          prototypeForTimespanDto(), prototypeForTodoDto()};
+          prototypeForTimespanDto(), prototypeForAssigneeDto(),
+          prototypeForTodoDto()};
 }

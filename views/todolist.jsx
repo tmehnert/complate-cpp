@@ -32,7 +32,7 @@ export default function TodoList({todos}) {
     </Layout>
 }
 
-function TodoItem({what, description, updateLink, timespan}) {
+function TodoItem({what, description, updateLink, timespan, assignee}) {
     return <form class="mb-4" method="GET" action={updateLink}>
         <div class="card">
             <div class="card-body">
@@ -40,7 +40,7 @@ function TodoItem({what, description, updateLink, timespan}) {
                 <p class="card-text text-muted">{description}</p>
             </div>
             <ul class="list-group">
-                <NeedDoBeDoneIn timespan={timespan}/>
+                <Assignment timespan={timespan} assignee={assignee} />
             </ul>
             <div class="card-body">
                 <button type="submit" value="done" class="btn btn-sm btn-primary">Done</button>
@@ -49,9 +49,12 @@ function TodoItem({what, description, updateLink, timespan}) {
     </form>
 }
 
-function NeedDoBeDoneIn({timespan}) {
+function Assignment({timespan, assignee}) {
     return <li class={`list-group-item is ${timespan.veryLate && " bg-warning"}`}>
         <dt>Need do be done in</dt>
         <dd>{timespan.amount} {timespan.unit}</dd>
+        <dt>Assignee</dt>
+        <dd>{assignee.forename} {assignee.lastname}</dd>
     </li>
 }
+
