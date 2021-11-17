@@ -79,8 +79,8 @@ TEST_CASE("ProxyWeak", "[core]") {
     }
 
     SECTION("with different object instance is not equal") {
-      ProxyWeakTestClass antoherInstance;
-      auto another = ProxyWeak("ProxyWeakTestClass", &antoherInstance);
+      ProxyWeakTestClass anotherInstance;
+      auto another = ProxyWeak("ProxyWeakTestClass", &anotherInstance);
       REQUIRE(another != proxy);
     }
   }
