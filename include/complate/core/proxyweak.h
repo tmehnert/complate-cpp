@@ -35,8 +35,27 @@ namespace complate {
  */
 class ProxyWeak {
 public:
-  /** Construct a ProxyWeak with given name and object */
+  /** Construct a ProxyWeak with given name and object pointer. */
   ProxyWeak(std::string name, void *object);
+
+  /**
+   * Construct a ProxyWeak with given name and const object pointer.
+   *
+   * @note ProxyWeak is not const aware, const-ness simply be casted away.
+   *
+   * @param name Name of the corresponding Prototype.
+   * @param object Const pointer to your object.
+   */
+  ProxyWeak(std::string name, const void *object);
+
+  /**
+   * Construct a ProxyWeak with given name and object reference.
+   *
+   * @param name Name of the corresponding Prototype.
+   * @param object Reference to your object. Will be stored as a Pointer.
+   */
+  template <typename T>
+  ProxyWeak(std::string name, T &object) : ProxyWeak(move(name), &object) {}
 
   /**
    * Construct a ProxyWeak with the name taken from T.
@@ -49,6 +68,18 @@ public:
    */
   template <typename T>
   explicit ProxyWeak(T *object) : ProxyWeak(typeid(T).name(), object) {}
+
+  /**
+   * Construct a ProxyWeak with the name taken from T.
+   *
+   * @note Because compilers don't have typeid(T).name() standardized,
+   * you should not use this, when you create a shared library and
+   * what to export your ProxyWeak and Prototype.
+   *
+   * @param object Reference to your object. Will be stored as a Pointer.
+   */
+  template <typename T>
+  explicit ProxyWeak(T &object) : ProxyWeak(&object) {}
 
   /** Get the name of the ProxyWeak. */
   [[nodiscard]] const std::string &name() const;

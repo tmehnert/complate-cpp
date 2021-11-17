@@ -21,6 +21,9 @@ using namespace complate;
 ProxyWeak::ProxyWeak(string name, void *object)
     : m_name(move(name)), m_object(object) {}
 
+ProxyWeak::ProxyWeak(std::string name, const void *object)
+    : ProxyWeak(move(name), (void *)object) {}
+
 const string &ProxyWeak::name() const { return m_name; }
 
 void *ProxyWeak::ptr() const { return m_object; }

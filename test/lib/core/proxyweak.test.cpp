@@ -25,6 +25,7 @@ class ProxyWeakTestClass {};
 
 TEST_CASE("ProxyWeak", "[core]") {
   ProxyWeakTestClass proxyWeakTestClass;
+  const ProxyWeakTestClass proxyWeakTestClassConst;
 
   SECTION("traits") {
     REQUIRE(is_copy_constructible_v<ProxyWeak>);
@@ -36,16 +37,30 @@ TEST_CASE("ProxyWeak", "[core]") {
   SECTION("constructed without name, take typeid for name") {
     auto proxy = ProxyWeak(&proxyWeakTestClass);
     REQUIRE_THAT(proxy.name(), Equals(typeid(ProxyWeakTestClass).name()));
+    proxy = ProxyWeak(&proxyWeakTestClassConst);
+    REQUIRE_THAT(proxy.name(), Equals(typeid(ProxyWeakTestClass).name()));
+    proxy = ProxyWeak(proxyWeakTestClass);
+    REQUIRE_THAT(proxy.name(), Equals(typeid(ProxyWeakTestClass).name()));
+    proxy = ProxyWeak(proxyWeakTestClassConst);
+    REQUIRE_THAT(proxy.name(), Equals(typeid(ProxyWeakTestClass).name()));
   }
 
   SECTION("constructed with name, take name") {
     auto proxy = ProxyWeak("MyProxyWeakTestClass", &proxyWeakTestClass);
+    REQUIRE_THAT(proxy.name(), Equals("MyProxyWeakTestClass"));
+    proxy = ProxyWeak("MyProxyWeakTestClass", proxyWeakTestClass);
     REQUIRE_THAT(proxy.name(), Equals("MyProxyWeakTestClass"));
   }
 
   SECTION("ptr return the object") {
     auto proxy = ProxyWeak("ProxyWeakTestClass", &proxyWeakTestClass);
     REQUIRE(proxy.ptr() == &proxyWeakTestClass);
+    proxy = ProxyWeak("ProxyWeakTestClass", &proxyWeakTestClassConst);
+    REQUIRE(proxy.ptr() == &proxyWeakTestClassConst);
+    proxy = ProxyWeak("ProxyWeakTestClass", proxyWeakTestClass);
+    REQUIRE(proxy.ptr() == &proxyWeakTestClass);
+    proxy = ProxyWeak("ProxyWeakTestClass", proxyWeakTestClassConst);
+    REQUIRE(proxy.ptr() == &proxyWeakTestClassConst);
   }
 
   SECTION("operator==/!=") {
