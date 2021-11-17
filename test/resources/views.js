@@ -269,9 +269,8 @@ class Renderer {
 function TodoItem(_ref2) {
   var what = _ref2.what,
       description = _ref2.description,
-      needToBeDoneIn = _ref2.needToBeDoneIn,
-      veryLate = _ref2.veryLate,
-      updateLink = _ref2.updateLink;
+      updateLink = _ref2.updateLink,
+      timespan = _ref2.timespan;
   return createElement("form", {
     "class": "mb-4",
     method: "GET",
@@ -287,8 +286,7 @@ function TodoItem(_ref2) {
   }, description)), createElement("ul", {
     "class": "list-group"
   }, createElement(NeedDoBeDoneIn, {
-    needToBeDoneIn: needToBeDoneIn,
-    veryLate: veryLate
+    timespan: timespan
   })), createElement("div", {
     "class": "card-body"
   }, createElement("button", {
@@ -298,11 +296,10 @@ function TodoItem(_ref2) {
   }, "Done"))));
 }
 function NeedDoBeDoneIn(_ref3) {
-  var needToBeDoneIn = _ref3.needToBeDoneIn,
-      veryLate = _ref3.veryLate;
+  var timespan = _ref3.timespan;
   return createElement("li", {
-    "class": "list-group-item is ".concat(veryLate && " bg-warning")
-  }, createElement("dt", null, "Need do be done in"), createElement("dd", null, needToBeDoneIn));
+    "class": "list-group-item is ".concat(timespan.veryLate && " bg-warning")
+  }, createElement("dt", null, "Need do be done in"), createElement("dd", null, timespan.amount, " ", timespan.unit));
 }var renderer = new Renderer({
   doctype: '<!DOCTYPE html>'
 });

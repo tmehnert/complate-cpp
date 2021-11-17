@@ -13,25 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#pragma once
-
-#include <string>
-
 #include "timespandto.h"
 
-class TodoDto {
-public:
-  TodoDto(std::string what, std::string description, std::string updateLink,
-          TimespanDto timespan);
+using namespace std;
 
-  [[nodiscard]] const std::string &what() const;
-  [[nodiscard]] const std::string &description() const;
-  [[nodiscard]] const std::string &updateLink() const;
-  [[nodiscard]] const TimespanDto &timespan() const;
+TimespanDto::TimespanDto(int amount, string unit, bool veryLate)
+    : m_amount(amount), m_unit(move(unit)), m_veryLate(veryLate) {}
 
-private:
-  std::string m_what;
-  std::string m_description;
-  std::string m_updateLink;
-  TimespanDto m_timespan;
-};
+int TimespanDto::amount() const { return m_amount; }
+
+const string& TimespanDto::unit() const { return m_unit; }
+
+bool TimespanDto::veryLate() const { return m_veryLate; }
