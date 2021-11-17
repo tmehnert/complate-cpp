@@ -42,7 +42,7 @@ export default function Greeting({person}) {
 unique_ptr<Renderer> renderer;
 string html = renderer->renderToString("Greeting", Object{
   { "person", Object{
-    { "name", "John Dow" }
+    { "name", "John Doe" }
   }}
 });
 ```
