@@ -60,6 +60,7 @@ void QuickJsPrototypeRegistry::add(const Prototype &prototype) {
 }
 
 JSValue QuickJsPrototypeRegistry::newInstanceOf(const Proxy &proxy) const {
+  QuickJsRendererContext::get(m_context)->proxyHolder().add(proxy);
   return newInstanceOf(proxy.name(), proxy.ptr().get());
 }
 

@@ -23,6 +23,7 @@
 #include "quickjshelper.h"
 #include "quickjsrenderercontext.h"
 #include "quickjsstreamadapter.h"
+#include "quickjsproxydeleter.h"
 
 using namespace complate;
 using namespace std;
@@ -38,6 +39,7 @@ public:
         m_render(evaluateSource(m_context, source)),
         m_streamAdapter(m_context),
         m_bindings(move(bindings)) {
+    QuickJsProxyDeleter deleter(m_rendererContext.proxyHolder());
     JS_SetMaxStackSize(m_runtime, NO_STACK_LIMIT);
     ensureConsoleDefined(m_bindings);
     m_rendererContext.mapper().fromObject(m_bindings, m_global);
@@ -53,6 +55,7 @@ public:
   void render(const string &view, const Object &parameters, Stream &stream) {
     lock_guard<mutex> guard(m_mutex);
     JS_UpdateStackTop(m_runtime);
+    QuickJsProxyDeleter deleter(m_rendererContext.proxyHolder());
     render(view, m_rendererContext.mapper().fromObject(parameters), stream);
   }
 

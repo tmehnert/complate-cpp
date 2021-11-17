@@ -46,6 +46,10 @@ QuickJsPrototypeRegistry& QuickJsRendererContext::prototypeRegistry() {
   return m_prototypeRegistry;
 }
 
+QuickJsProxyHolder& QuickJsRendererContext::proxyHolder() {
+  return m_proxyHolder;
+}
+
 QuickJsRendererContext* QuickJsRendererContext::get(JSContext* ctx) {
   return static_cast<QuickJsRendererContext *>(JS_GetContextOpaque(ctx));
 }

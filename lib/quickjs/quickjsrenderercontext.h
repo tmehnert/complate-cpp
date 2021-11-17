@@ -20,6 +20,7 @@
 #include "quickjsmapper.h"
 #include "quickjsprototyperegistry.h"
 #include "quickjsunmapper.h"
+#include "quickjsproxyholder.h"
 
 namespace complate {
 
@@ -32,6 +33,7 @@ public:
   [[nodiscard]] QuickJsMapper &mapper();
   [[nodiscard]] QuickJsUnmapper &unmapper();
   [[nodiscard]] QuickJsPrototypeRegistry &prototypeRegistry();
+  [[nodiscard]] QuickJsProxyHolder &proxyHolder();
 
   static QuickJsRendererContext *get(JSContext *ctx);
 
@@ -40,5 +42,6 @@ private:
   QuickJsMapper m_mapper;
   QuickJsUnmapper m_unmapper;
   QuickJsPrototypeRegistry m_prototypeRegistry;
+  QuickJsProxyHolder m_proxyHolder;
 };
 }  // namespace complate
