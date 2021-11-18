@@ -16,12 +16,15 @@
 #include "resources.h"
 #include "catch2/catch.hpp"
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
 string Resources::read(const string &filename) {
   ifstream ifs = ifstream(TEST_RESOURCE_DIR + filename);
-  string resourceContent = string(istreambuf_iterator<char>(ifs), istreambuf_iterator<char>());
+  stringstream ss;
+  ss << ifs.rdbuf();
+  string resourceContent = ss.str();
   if (resourceContent.empty()) {
     FAIL("cannot read resouce: " + filename);
   }

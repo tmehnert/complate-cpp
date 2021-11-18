@@ -18,7 +18,7 @@ import {createElement} from 'complate-stream';
 import Layout from './components/layout';
 
 export default function TodoList({todos}) {
-    // console will not print anythgin. Add an binding 'console' to use.
+    // console will not print anything. Add an binding 'console' to use.
     console.debug("some debug msg")
     console.log("some log msg")
     console.error("some error msg")
@@ -32,7 +32,7 @@ export default function TodoList({todos}) {
     </Layout>
 }
 
-function TodoItem({what, description, needToBeDoneIn, veryLate, updateLink}) {
+function TodoItem({what, description, updateLink, timespan, assignee}) {
     return <form class="mb-4" method="GET" action={updateLink}>
         <div class="card">
             <div class="card-body">
@@ -40,7 +40,7 @@ function TodoItem({what, description, needToBeDoneIn, veryLate, updateLink}) {
                 <p class="card-text text-muted">{description}</p>
             </div>
             <ul class="list-group">
-                <NeedDoBeDoneIn needToBeDoneIn={needToBeDoneIn} veryLate={veryLate}/>
+                <Assignment timespan={timespan} assignee={assignee} />
             </ul>
             <div class="card-body">
                 <button type="submit" value="done" class="btn btn-sm btn-primary">Done</button>
@@ -49,9 +49,12 @@ function TodoItem({what, description, needToBeDoneIn, veryLate, updateLink}) {
     </form>
 }
 
-function NeedDoBeDoneIn({needToBeDoneIn, veryLate}) {
-    return <li class={`list-group-item is ${veryLate && " bg-warning"}`}>
+function Assignment({timespan, assignee}) {
+    return <li class={`list-group-item is ${timespan.veryLate && " bg-warning"}`}>
         <dt>Need do be done in</dt>
-        <dd>{needToBeDoneIn}</dd>
+        <dd>{timespan.amount} {timespan.unit}</dd>
+        <dt>Assignee</dt>
+        <dd>{assignee.forename} {assignee.lastname}</dd>
     </li>
 }
+

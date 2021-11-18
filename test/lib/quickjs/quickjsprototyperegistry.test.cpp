@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#include "../../../lib/quickjs/quickjsprototyperegistry.h"
+#include "../../../lib/quickjs/quickjsrenderercontext.h"
 
 #include <complate/core/prototypebuilder.h>
 
@@ -29,7 +29,8 @@ using namespace std;
 TEST_CASE("QuickJsPrototypeRegistry", "[quickjs]") {
   JSRuntime *runtime = JS_NewRuntime();
   JSContext *context = JS_NewContext(runtime);
-  QuickJsPrototypeRegistry registry(context);
+  QuickJsRendererContext rctx(context, Testdata::prototypes());
+  auto &registry = rctx.prototypeRegistry();
   JSValue v;
 
   registry.add(Testdata::prototypeForStdString());

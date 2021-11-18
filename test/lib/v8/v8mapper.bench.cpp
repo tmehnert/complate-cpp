@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 #define CATCH_CONFIG_ENABLE_BENCHMARKING
-#include "../../../lib/v8/v8mapper.h"
+#include "../../../lib/v8/v8renderercontext.h"
 
 #include <v8.h>
 
@@ -33,7 +33,8 @@ TEST_CASE("V8MapperBenchmark", "[v8][.benchmark]") {
   v8::HandleScope hscope(isolate);
   auto context = v8::Context::New(isolate);
   v8::Context::Scope cscope(context);
-  V8Mapper mapper(isolate, Testdata::prototypes());
+  V8RendererContext rctx(isolate, Testdata::prototypes());
+  auto &mapper = rctx.mapper();
 
   const Object parameters = Testdata::forMapperBenchmark();
 

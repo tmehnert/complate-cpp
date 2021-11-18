@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#include "../../lib/v8/v8unmapper.h"
+#include "../../lib/v8/v8renderercontext.h"
 
 #include <complate/v8/v8platform.h>
 
@@ -31,37 +31,39 @@ TEST_CASE("V8Unmapper", "[v8]") {
   v8::HandleScope hscope(isolate);
   auto context = v8::Context::New(isolate);
   v8::Context::Scope cscope(context);
-  V8Unmapper unmapper(isolate);
+  V8RendererContext rctx(isolate);
+  auto &mapper = rctx.mapper();
+  auto &unmapper = rctx.unmapper();
 
   SECTION("fromValue") {
     SECTION("unmap undefined") {
-      auto value = v8::Undefined(isolate).As<v8::Value>();
+      auto value = mapper.fromValue(Value{});
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<Undefined>());
     }
 
     SECTION("unmap null") {
-      auto value = v8::Null(isolate).As<v8::Value>();
+      auto value = mapper.fromValue(nullptr);
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<Null>());
     }
 
     SECTION("unmap true") {
-      auto value = v8::Boolean::New(isolate, true);
+      auto value = mapper.fromValue(true);
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<Bool>());
       REQUIRE(unmapped.exactly<Bool>() == true);
     }
 
     SECTION("unmap false") {
-      auto value = v8::Boolean::New(isolate, false);
+      auto value = mapper.fromValue(false);
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<Bool>());
       REQUIRE(unmapped.exactly<Bool>() == false);
     }
 
     SECTION("unmap int32_t") {
-      auto value = v8::Integer::New(isolate, -32);
+      auto value = mapper.fromValue((int32_t)-32);
       const Value unmapped = unmapper.fromValue(value);
       const Number number = unmapped.exactly<Number>();
       REQUIRE(number.holds<int32_t>());
@@ -69,7 +71,7 @@ TEST_CASE("V8Unmapper", "[v8]") {
     }
 
     SECTION("unmap uint32_t") {
-      auto value = v8::Integer::NewFromUnsigned(isolate, 815);
+      auto value = mapper.fromValue((uint32_t)815);
       const Value unmapped = unmapper.fromValue(value);
       const Number number = unmapped.exactly<Number>();
       REQUIRE(number.holds<uint32_t>());
@@ -77,7 +79,7 @@ TEST_CASE("V8Unmapper", "[v8]") {
     }
 
     SECTION("unmap int64_t") {
-      auto value = v8::BigInt::New(isolate, -123000);
+      auto value = mapper.fromValue((int64_t)-123000);
       const Value unmapped = unmapper.fromValue(value);
       const Number number = unmapped.exactly<Number>();
       REQUIRE(number.holds<int64_t>());
@@ -85,20 +87,52 @@ TEST_CASE("V8Unmapper", "[v8]") {
     }
 
     SECTION("unmap double") {
-      auto value = v8::Number::New(isolate, 3.1415);
+      auto value = mapper.fromValue(3.1415);
       const Value unmapped = unmapper.fromValue(value);
       const Number number = unmapped.exactly<Number>();
       REQUIRE(number.holds<double>());
       REQUIRE(number.exactly<double>() == Approx(3.1415));
     }
 
-    SECTION("unmap text") {
-      auto value = v8::String::NewFromUtf8(isolate, "Hello World!",
-                                           v8::NewStringType::kNormal)
-                       .ToLocalChecked();
+    SECTION("unmap string") {
+      auto value = mapper.fromValue("Hello World!");
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<String>());
       REQUIRE(unmapped.exactly<String>() == "Hello World!");
+    }
+
+    SECTION("unmap array") {
+      auto value = mapper.fromValue(Array{1, true, "foo"});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Array>());
+      REQUIRE(unmapped.exactly<Array>() == Array{1, true, "foo"});
+    }
+
+    SECTION("unmap object") {
+      auto obj = Object{{"foo", "bar"}, {"baz", 23}};
+      auto value = mapper.fromValue(obj);
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Object>());
+      REQUIRE(unmapped.exactly<Object>() == obj);
+    }
+  }
+
+  SECTION("fromArray") {
+    SECTION("unmap empty") {
+      auto value = mapper.fromValue(Array{});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Array>());
+      REQUIRE(unmapped.exactly<Array>().empty());
+    }
+  }
+
+
+  SECTION("fromObject") {
+    SECTION("unmap empty") {
+      auto value = mapper.fromValue(Object{});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Object>());
+      REQUIRE(unmapped.exactly<Object>().empty());
     }
   }
 }

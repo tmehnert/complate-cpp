@@ -15,22 +15,33 @@
  */
 #pragma once
 
-#include <complate/core/value.h>
+#include <vector>
 
-#include "quickjs.h"
+#include "quickjsmapper.h"
+#include "quickjsprototyperegistry.h"
+#include "quickjsunmapper.h"
+#include "quickjsproxyholder.h"
 
 namespace complate {
 
-class QuickJsUnmapper {
+class QuickJsRendererContext {
 public:
-  explicit QuickJsUnmapper(JSContext *context);
+  explicit QuickJsRendererContext(
+      JSContext *context, const std::vector<Prototype> &prototypes = {});
+  ~QuickJsRendererContext();
 
-  Value fromValue(JSValue value);
+  [[nodiscard]] QuickJsMapper &mapper();
+  [[nodiscard]] QuickJsUnmapper &unmapper();
+  [[nodiscard]] QuickJsPrototypeRegistry &prototypeRegistry();
+  [[nodiscard]] QuickJsProxyHolder &proxyHolder();
+
+  static QuickJsRendererContext *get(JSContext *ctx);
 
 private:
   JSContext *m_context;
-
-  Array fromArray(JSValue arr);
-  Object fromObject(JSValue arr);
+  QuickJsMapper m_mapper;
+  QuickJsUnmapper m_unmapper;
+  QuickJsPrototypeRegistry m_prototypeRegistry;
+  QuickJsProxyHolder m_proxyHolder;
 };
 }  // namespace complate

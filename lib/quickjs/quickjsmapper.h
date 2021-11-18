@@ -15,20 +15,15 @@
  */
 #pragma once
 
-#include <complate/core/prototype.h>
 #include <complate/core/value.h>
 
-#include <vector>
-
 #include "quickjs.h"
-#include "quickjsprototyperegistry.h"
 
 namespace complate {
 
 class QuickJsMapper {
 public:
-  explicit QuickJsMapper(JSContext *context,
-                         const std::vector<Prototype> &prototypes);
+  explicit QuickJsMapper(JSContext *context);
 
   JSValue fromObject(const Object &object);
   JSValue fromObject(const Object &object, JSValue parent);
@@ -40,7 +35,6 @@ public:
 
 private:
   JSContext *m_context;
-  QuickJsPrototypeRegistry m_prototypeRegistry;
 
   inline JSValue valueFrom(Bool d);
   inline JSValue valueFrom(const Number &number);

@@ -13,8 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#include "../../../lib/quickjs/quickjsunmapper.h"
-
+#include "../../../lib/quickjs/quickjsrenderercontext.h"
 #include "catch2/catch.hpp"
 #include "quickjs.h"
 
@@ -24,38 +23,40 @@ using namespace std;
 TEST_CASE("QuickJsUnmapper", "[quickjs]") {
   JSRuntime *runtime = JS_NewRuntime();
   JSContext *context = JS_NewContext(runtime);
-  QuickJsUnmapper unmapper(context);
+  QuickJsRendererContext rctx(context);
+  auto &unmapper = rctx.unmapper();
+  auto &mapper = rctx.mapper();
   JSValue value;
 
   SECTION("fromValue") {
     SECTION("unmap undefined") {
-      value = JS_UNDEFINED;
+      value = mapper.fromValue(Value{});
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<Undefined>());
     }
 
     SECTION("unmap null") {
-      value = JS_NULL;
+      value = mapper.fromValue(nullptr);
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<Null>());
     }
 
     SECTION("unmap true") {
-      value = JS_TRUE;
+      value = mapper.fromValue(true);
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<bool>());
       REQUIRE(unmapped.exactly<bool>() == true);
     }
 
     SECTION("unmap false") {
-      value = JS_FALSE;
+      value = mapper.fromValue(false);
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<bool>());
       REQUIRE(unmapped.exactly<bool>() == false);
     }
 
     SECTION("unmap int32_t") {
-      value = JS_NewInt32(context, -32);
+      value = mapper.fromValue((int32_t)-32);
       const Value unmapped = unmapper.fromValue(value);
       const Number number = unmapped.exactly<Number>();
       /* The unmapper is unable to determine if it's an signed or unsigned, so i
@@ -67,7 +68,7 @@ TEST_CASE("QuickJsUnmapper", "[quickjs]") {
     }
 
     SECTION("unmap uint32_t") {
-      value = JS_NewUint32(context, 815);
+      value = mapper.fromValue((uint32_t)815);
       const Value unmapped = unmapper.fromValue(value);
       const Number number = unmapped.exactly<Number>();
       /* The unmapper is unable to determine if it's an signed or unsigned, so i
@@ -79,7 +80,7 @@ TEST_CASE("QuickJsUnmapper", "[quickjs]") {
     }
 
     SECTION("unmap int64_t") {
-      value = JS_NewInt64(context, -123000);
+      value = mapper.fromValue((int64_t)-123000);
       const Value unmapped = unmapper.fromValue(value);
       const Number number = unmapped.exactly<Number>();
       REQUIRE(number.holds<int64_t>());
@@ -87,18 +88,51 @@ TEST_CASE("QuickJsUnmapper", "[quickjs]") {
     }
 
     SECTION("unmap double") {
-      value = JS_NewFloat64(context, 3.1415);
+      value = mapper.fromValue(3.1415);
       const Value unmapped = unmapper.fromValue(value);
       const Number number = unmapped.exactly<Number>();
       REQUIRE(number.holds<double>());
       REQUIRE(number.exactly<double>() == Approx(3.1415));
     }
 
-    SECTION("unmap text") {
-      value = JS_NewString(context, "Hello World!");
+    SECTION("unmap string") {
+      value = mapper.fromValue("Hello World!");
       const Value unmapped = unmapper.fromValue(value);
       REQUIRE(unmapped.holds<String>());
       REQUIRE(unmapped.exactly<String>() == "Hello World!");
+    }
+
+    SECTION("unmap array") {
+      value = mapper.fromValue(Array{1, true, "foo"});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Array>());
+      REQUIRE(unmapped.exactly<Array>() == Array{1, true, "foo"});
+    }
+
+    SECTION("unmap object") {
+      auto obj = Object{{"foo", "bar"}, {"baz", 23}};
+      value = mapper.fromValue(obj);
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Object>());
+      REQUIRE(unmapped.exactly<Object>() == obj);
+    }
+  }
+
+  SECTION("fromArray") {
+    SECTION("unmap empty") {
+      value = mapper.fromValue(Array{});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Array>());
+      REQUIRE(unmapped.exactly<Array>().empty());
+    }
+  }
+
+  SECTION("fromObject") {
+    SECTION("unmap empty") {
+      value = mapper.fromValue(Object{});
+      const Value unmapped = unmapper.fromValue(value);
+      REQUIRE(unmapped.holds<Object>());
+      REQUIRE(unmapped.exactly<Object>().empty());
     }
   }
 

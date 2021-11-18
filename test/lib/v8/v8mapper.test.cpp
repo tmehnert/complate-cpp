@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#include "../../lib/v8/v8mapper.h"
+#include "../../lib/v8/v8renderercontext.h"
 
 #include "catch2/catch.hpp"
 #include "testdata.h"
@@ -32,7 +32,8 @@ TEST_CASE("V8Mapper", "[v8]") {
   v8::HandleScope hscope(isolate);
   auto context = v8::Context::New(isolate);
   v8::Context::Scope cscope(context);
-  V8Mapper mapper(isolate, Testdata::prototypes());
+  V8RendererContext rctx(isolate, Testdata::prototypes());
+  auto &mapper = rctx.mapper();
 
   auto v8String = [isolate](const string &str) -> v8::Local<v8::String> {
     return v8::String::NewFromUtf8(isolate, str.c_str(),

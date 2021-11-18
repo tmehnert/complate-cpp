@@ -20,6 +20,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace complate {
 

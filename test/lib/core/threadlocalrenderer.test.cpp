@@ -13,6 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+#if !defined(__MINGW32__) && !defined(__MINGW64__)
 #include <complate/core/threadlocalrenderer.h>
 
 #include <thread>
@@ -96,3 +97,5 @@ TEST_CASE("ThreadLocalRenderer", "[core]") {
     }
   }
 }
+
+#endif // !defined(__MINGW32__) && !defined(__MINGW64__)

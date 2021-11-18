@@ -17,6 +17,7 @@
 #include <complate/core/reevaluatingrenderer.h>
 
 #include <fstream>
+#include <sstream>
 
 #include "httplib.h"
 
@@ -24,10 +25,10 @@ using namespace std;
 using namespace complate;
 
 string getViews() {
-  using istream_it = istreambuf_iterator<char>;
   ifstream ifs = ifstream(TEST_RESOURCE_DIR + string("views.js"));
-  string content = string(istream_it(ifs), istream_it());
-  return content;
+  stringstream ss;
+  ss << ifs.rdbuf();
+  return ss.str();
 }
 
 int main() {

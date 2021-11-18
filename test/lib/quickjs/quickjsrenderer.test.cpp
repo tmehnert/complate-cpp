@@ -29,7 +29,7 @@ TEST_CASE("QuickJsRenderer", "[quickjs]") {
   auto stream = StringStream();
 
   SECTION("constructor") {
-    SECTION("thows complate::Exception when render function is not defined") {
+    SECTION("throws complate::Exception when render function is not defined") {
       REQUIRE_THROWS_AS(QuickJsRenderer(""), complate::Exception);
       REQUIRE_THROWS_WITH(QuickJsRenderer(""),
                           Contains("ReferenceError") && Contains("render"));

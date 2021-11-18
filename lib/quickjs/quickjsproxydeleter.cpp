@@ -13,25 +13,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#include <complate/core/proxyweak.h>
+#include "quickjsproxydeleter.h"
 
-using namespace std;
 using namespace complate;
 
-ProxyWeak::ProxyWeak(string name, void *object)
-    : m_name(move(name)), m_object(object) {}
+QuickJsProxyDeleter::QuickJsProxyDeleter(QuickJsProxyHolder& holder)
+    : m_holder(holder) {}
 
-ProxyWeak::ProxyWeak(std::string name, const void *object)
-    : ProxyWeak(move(name), (void *)object) {}
-
-const string &ProxyWeak::name() const { return m_name; }
-
-void *ProxyWeak::ptr() const { return m_object; }
-
-bool ProxyWeak::operator==(const ProxyWeak &other) const {
-  return (m_object == other.m_object) && (m_name == other.m_name);
-}
-
-bool ProxyWeak::operator!=(const ProxyWeak &other) const {
-  return !operator==(other);
+QuickJsProxyDeleter::~QuickJsProxyDeleter() {
+  m_holder.clear();
 }

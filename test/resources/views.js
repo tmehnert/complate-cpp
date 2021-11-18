@@ -269,9 +269,9 @@ class Renderer {
 function TodoItem(_ref2) {
   var what = _ref2.what,
       description = _ref2.description,
-      needToBeDoneIn = _ref2.needToBeDoneIn,
-      veryLate = _ref2.veryLate,
-      updateLink = _ref2.updateLink;
+      updateLink = _ref2.updateLink,
+      timespan = _ref2.timespan,
+      assignee = _ref2.assignee;
   return createElement("form", {
     "class": "mb-4",
     method: "GET",
@@ -286,9 +286,9 @@ function TodoItem(_ref2) {
     "class": "card-text text-muted"
   }, description)), createElement("ul", {
     "class": "list-group"
-  }, createElement(NeedDoBeDoneIn, {
-    needToBeDoneIn: needToBeDoneIn,
-    veryLate: veryLate
+  }, createElement(Assignment, {
+    timespan: timespan,
+    assignee: assignee
   })), createElement("div", {
     "class": "card-body"
   }, createElement("button", {
@@ -297,12 +297,12 @@ function TodoItem(_ref2) {
     "class": "btn btn-sm btn-primary"
   }, "Done"))));
 }
-function NeedDoBeDoneIn(_ref3) {
-  var needToBeDoneIn = _ref3.needToBeDoneIn,
-      veryLate = _ref3.veryLate;
+function Assignment(_ref3) {
+  var timespan = _ref3.timespan,
+      assignee = _ref3.assignee;
   return createElement("li", {
-    "class": "list-group-item is ".concat(veryLate && " bg-warning")
-  }, createElement("dt", null, "Need do be done in"), createElement("dd", null, needToBeDoneIn));
+    "class": "list-group-item is ".concat(timespan.veryLate && " bg-warning")
+  }, createElement("dt", null, "Need do be done in"), createElement("dd", null, timespan.amount, " ", timespan.unit), createElement("dt", null, "Assignee"), createElement("dd", null, assignee.forename, " ", assignee.lastname));
 }var renderer = new Renderer({
   doctype: '<!DOCTYPE html>'
 });

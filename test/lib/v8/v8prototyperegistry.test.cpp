@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#include "../../lib/v8/v8prototyperegistry.h"
+#include "../../lib/v8/v8renderercontext.h"
 
 #include "catch2/catch.hpp"
 #include "testdata.h"
@@ -33,8 +33,8 @@ TEST_CASE("V8PrototypeRegistry", "[v8]") {
   auto context = v8::Context::New(isolate);
   v8::Context::Scope cscope(context);
 
-  V8PrototypeRegistry registry(isolate);
-  registry.add(Testdata::prototypeForStdString());
+  V8RendererContext rctx(isolate, Testdata::prototypes());
+  auto &registry = rctx.prototypeRegistry();
 
   SECTION("unknown prototype return undefined for Proxy") {
     Proxy proxy("unknown", make_shared<int>(23));

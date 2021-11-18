@@ -28,5 +28,10 @@ public:
 
 private:
   v8::Isolate *m_isolate;
+
+  Array fromArray(v8::Local<v8::Array> arr);
+  Object fromObject(v8::Local<v8::Object> obj);
+
+  std::string fromString(v8::Local<v8::String> str);
 };
 }  // namespace complate

@@ -13,25 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#include <complate/core/proxyweak.h>
+#include "timespandto.h"
 
 using namespace std;
-using namespace complate;
 
-ProxyWeak::ProxyWeak(string name, void *object)
-    : m_name(move(name)), m_object(object) {}
+TimespanDto::TimespanDto(int amount, string unit, bool veryLate)
+    : m_amount(amount), m_unit(move(unit)), m_veryLate(veryLate) {}
 
-ProxyWeak::ProxyWeak(std::string name, const void *object)
-    : ProxyWeak(move(name), (void *)object) {}
+int TimespanDto::amount() const { return m_amount; }
 
-const string &ProxyWeak::name() const { return m_name; }
+const string& TimespanDto::unit() const { return m_unit; }
 
-void *ProxyWeak::ptr() const { return m_object; }
-
-bool ProxyWeak::operator==(const ProxyWeak &other) const {
-  return (m_object == other.m_object) && (m_name == other.m_name);
-}
-
-bool ProxyWeak::operator!=(const ProxyWeak &other) const {
-  return !operator==(other);
-}
+bool TimespanDto::veryLate() const { return m_veryLate; }

@@ -15,18 +15,12 @@
  */
 #include "v8mapper.h"
 
-#include "v8unmapper.h"
+#include "v8renderercontext.h"
 
 using namespace complate;
 using namespace std;
 
-V8Mapper::V8Mapper(v8::Isolate *isolate,
-                   const std::vector<Prototype> &prototypes)
-    : m_isolate(isolate), m_prototypeRegistry(isolate) {
-  for (const Prototype &prototype : prototypes) {
-    m_prototypeRegistry.add(prototype);
-  }
-}
+V8Mapper::V8Mapper(v8::Isolate *isolate) : m_isolate(isolate) {}
 
 // NOLINTNEXTLINE(misc-no-recursion)
 v8::Local<v8::Object> V8Mapper::fromObject(const Object &object) {
@@ -87,11 +81,13 @@ v8::Local<v8::Function> V8Mapper::fromFunction(const Function &d) {
 }
 
 v8::Local<v8::Value> V8Mapper::fromProxy(const Proxy &proxy) {
-  return m_prototypeRegistry.newInstanceOf(proxy);
+  auto rctx = V8RendererContext::get(m_isolate);
+  return rctx->prototypeRegistry().newInstanceOf(proxy);
 }
 
 v8::Local<v8::Value> V8Mapper::fromProxyWeak(const ProxyWeak &proxyWeak) {
-  return m_prototypeRegistry.newInstanceOf(proxyWeak);
+  auto rctx = V8RendererContext::get(m_isolate);
+  return rctx->prototypeRegistry().newInstanceOf(proxyWeak);
 }
 
 v8::Local<v8::Value> V8Mapper::valueFrom(const String &text) {
@@ -132,14 +128,13 @@ v8::Local<v8::String> V8Mapper::newInternalizedStringFrom(
 }
 
 void V8Mapper::proxy(const v8::FunctionCallbackInfo<v8::Value> &info) {
-  V8Mapper mapper(info.GetIsolate(), {});
-  V8Unmapper unmapper(info.GetIsolate());
+  auto rctx = V8RendererContext::get(info.GetIsolate());
   Array args;
   for (int i = 0; i < info.Length(); ++i) {
-    args.emplace_back(unmapper.fromValue(info[i]));
+    args.emplace_back(rctx->unmapper().fromValue(info[i]));
   }
 
   auto intern = v8::Local<v8::External>::Cast(info.Data())->Value();
   auto fn = static_cast<Function *>(intern);
-  info.GetReturnValue().Set(mapper.fromValue((*fn).apply(args)));
+  info.GetReturnValue().Set(rctx->mapper().fromValue((*fn).apply(args)));
 }

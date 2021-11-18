@@ -17,20 +17,20 @@
 
 using namespace std;
 
-TodoDto::TodoDto(string what, string description, string needToBeDoneIn,
-                 bool veryLate, string updateLink)
+TodoDto::TodoDto(string what, string description, string updateLink,
+                 TimespanDto timespan, AssigneeDto assignee)
     : m_what(move(what)),
-      m_describtion(move(description)),
-      m_needToBeDoneIn(move(needToBeDoneIn)),
-      m_veryLate(veryLate),
-      m_updateLink(move(updateLink)) {}
+      m_description(move(description)),
+      m_updateLink(move(updateLink)),
+      m_timespan(move(timespan)),
+      m_assignee(move(assignee)) {}
 
 const string &TodoDto::what() const { return m_what; }
 
-const string &TodoDto::description() const { return m_describtion; }
-
-bool TodoDto::veryLate() const { return m_veryLate; }
-
-const string &TodoDto::needToBeDoneIn() const { return m_needToBeDoneIn; }
+const string &TodoDto::description() const { return m_description; }
 
 const string &TodoDto::updateLink() const { return m_updateLink; }
+
+const TimespanDto &TodoDto::timespan() const { return m_timespan; }
+
+const AssigneeDto &TodoDto::assignee() const { return m_assignee; }

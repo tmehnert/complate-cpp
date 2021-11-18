@@ -20,6 +20,7 @@ using namespace std;
 
 QuickJsUnmapper::QuickJsUnmapper(JSContext *context) : m_context(context) {}
 
+// NOLINTNEXTLINE(misc-no-recursion)
 Value QuickJsUnmapper::fromValue(JSValue value) {
   if (JS_IsString(value)) {
     size_t len;
@@ -42,7 +43,50 @@ Value QuickJsUnmapper::fromValue(JSValue value) {
     return JS_ToBool(m_context, value) != 0;
   } else if (JS_IsNull(value)) {
     return nullptr;
+  } else if (JS_IsArray(m_context, value)) {
+    return fromArray(value);
+  } else if (JS_IsObject(value)) {
+    return fromObject(value);
   }
 
   return {};
+}
+
+// NOLINTNEXTLINE(misc-no-recursion)
+Array QuickJsUnmapper::fromArray(JSValue arr) {
+  JSValue l = JS_GetPropertyStr(m_context, arr, "length");
+  uint32_t length;
+  JS_ToUint32(m_context, &length, l);
+  JS_FreeValue(m_context, l);
+
+  Array array;
+  array.reserve(length);
+
+  for (uint32_t i = 0; i < length; i++) {
+    JSValue item = JS_GetPropertyUint32(m_context, arr, i);
+    array.push_back(fromValue(item));
+    JS_FreeValue(m_context, item);
+  }
+
+  return array;
+}
+
+// NOLINTNEXTLINE(misc-no-recursion)
+Object QuickJsUnmapper::fromObject(JSValue obj) {
+  static const int flags = JS_GPN_STRING_MASK | JS_GPN_ENUM_ONLY;
+  JSPropertyEnum *props = nullptr;
+  uint32_t length = 0;
+  JS_GetOwnPropertyNames(m_context, &props, &length, obj, flags);
+
+  Object object;
+
+  for (uint32_t i = 0; i < length; i++) {
+    JSValue val = JS_GetProperty(m_context, obj, props[i].atom);
+    const char *key = JS_AtomToCString(m_context, props[i].atom);
+    object.emplace(key, fromValue(val));
+    JS_FreeCString(m_context, key);
+    JS_FreeValue(m_context, val);
+  }
+
+  return object;
 }

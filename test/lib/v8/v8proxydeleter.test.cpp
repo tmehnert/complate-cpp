@@ -13,29 +13,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#define CATCH_CONFIG_ENABLE_BENCHMARKING
-#include "../../../lib/quickjs/quickjsrenderercontext.h"
+#include "../../lib/v8/v8proxydeleter.h"
 
 #include "catch2/catch.hpp"
-#include "quickjs.h"
-#include "testdata.h"
 
 using namespace complate;
 using namespace std;
 
-TEST_CASE("QuickjsMapperBenchmark", "[quickjs][.benchmark]") {
-  JSRuntime *runtime = JS_NewRuntime();
-  JSContext *context = JS_NewContext(runtime);
-  QuickJsRendererContext rctx(context, Testdata::prototypes());
-  auto &mapper = rctx.mapper();
+TEST_CASE("V8ProxyDeleter", "[v8]") {
+  SECTION("clear ProxyHolder on destructor") {
+    V8ProxyHolder holder;
 
-  const Object parameters = Testdata::forMapperBenchmark();
-
-  BENCHMARK("convert parameters") {
-    JSValue v = mapper.fromObject(parameters);
-    JS_FreeValue(context, v);
-  };
-
-  JS_FreeContext(context);
-  JS_FreeRuntime(runtime);
+    Proxy proxy("std::string", make_shared<string>("foo"));
+    REQUIRE(proxy.ptr().use_count() == 1);
+    holder.add(proxy);
+    REQUIRE(proxy.ptr().use_count() == 2);
+    {
+      V8ProxyDeleter deleter(holder);
+      REQUIRE(proxy.ptr().use_count() == 2);
+    }
+    REQUIRE(proxy.ptr().use_count() == 1);
+  }
 }

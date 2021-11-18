@@ -13,25 +13,21 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-#include <complate/core/proxyweak.h>
+#pragma once
 
-using namespace std;
-using namespace complate;
+#include <complate/core/proxy.h>
 
-ProxyWeak::ProxyWeak(string name, void *object)
-    : m_name(move(name)), m_object(object) {}
+#include <vector>
 
-ProxyWeak::ProxyWeak(std::string name, const void *object)
-    : ProxyWeak(move(name), (void *)object) {}
+namespace complate {
 
-const string &ProxyWeak::name() const { return m_name; }
+class QuickJsProxyHolder {
+public:
+  void add(const Proxy &proxy);
+  void clear();
 
-void *ProxyWeak::ptr() const { return m_object; }
+private:
+  std::vector<Proxy> m_proxies;
+};
 
-bool ProxyWeak::operator==(const ProxyWeak &other) const {
-  return (m_object == other.m_object) && (m_name == other.m_name);
-}
-
-bool ProxyWeak::operator!=(const ProxyWeak &other) const {
-  return !operator==(other);
-}
+}  // namespace complate

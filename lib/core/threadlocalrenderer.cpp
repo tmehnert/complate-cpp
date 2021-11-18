@@ -13,6 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+#if !defined(__MINGW32__) && !defined(__MINGW64__)
 #include <complate/core/threadlocalrenderer.h>
 
 using namespace complate;
@@ -64,3 +65,5 @@ void ThreadLocalRenderer::render(const string &view, const string &parameters,
 }
 
 void ThreadLocalRenderer::reset() { m_impl->reset(); }
+
+#endif // !defined(__MINGW32__) && !defined(__MINGW64__)
