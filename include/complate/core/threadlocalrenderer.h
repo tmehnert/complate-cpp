@@ -15,6 +15,10 @@
  */
 #pragma once
 
+#if defined(__MINGW32__) || defined(__MINGW64__)
+#error "Can't use ThreadLocalRenderer in MinGW, because thread_local is broken"
+#endif
+
 #include "renderer.h"
 
 namespace complate {
