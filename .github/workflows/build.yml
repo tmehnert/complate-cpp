@@ -56,38 +56,34 @@ jobs:
         run: ctest -C ${{matrix.build_type}} --output-on-failure --no-tests=error
 
   windows-build:
-    name: Windows, mingw-${{matrix.mingw}}, ${{matrix.build_type}}
+    name: Windows, mingw, ${{matrix.build_type}}
     runs-on: windows-2019
     strategy:
       fail-fast: false
       matrix:
-        mingw:
-          - 8.5.0
         build_type: [ Debug, Release ]
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/cache@v2
+      - uses: msys2/setup-msys2@v2
         with:
-          path: C:\ProgramData\chocolatey\lib\mingw
-          key: ${{runner.os}}-chocolatey-mingw-${{matrix.mingw}}
-
-      - name: Install Dependencies
-        run: choco upgrade mingw -y --version=${{matrix.mingw}} --no-progress --allow-downgrade
+          release: false
+          install: >-
+            mingw-w64-x86_64-ninja
 
       - name: Configure CMake
         run: |
-          cmake -B ${{github.workspace}}/build `
-            -DCMAKE_BUILD_TYPE=${{matrix.build_type}} `
-            -DBUILD_TESTS=${{env.BUILD_TESTS}} `
-            -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}} `
-            -DBUILD_V8_RENDERER=off `
-            -G "MinGW Makefiles"
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
+            -DBUILD_TESTS=${{env.BUILD_TESTS}} \
+            -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}} \
+            -DBUILD_V8_RENDERER=off
 
       - name: Build
-        run: |
-          cmake --build ${{github.workspace}}/build `
-            --config ${{matrix.build_type}}
+        run: cmake --build build
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run:  .\test\lib\complate-tests.exe --order lex
+        run:  ctest --output-on-failure --no-tests=error
