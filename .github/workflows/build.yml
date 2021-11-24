@@ -112,4 +112,4 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run:  test/lib/complate-tests.exe --order lex
+        run:  gdb -ex run --nx --args test/lib/complate-tests.exe --order lex
