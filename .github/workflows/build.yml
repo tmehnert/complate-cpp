@@ -55,6 +55,33 @@ jobs:
         working-directory: ${{github.workspace}}/build
         run: ctest -C ${{matrix.build_type}} --output-on-failure --no-tests=error
 
+
+  macos-build:
+    name: macOS, clang, ${{matrix.build_type}}
+    runs-on: macos-10.15
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [ Debug, Release ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Configure CMake
+        run: |
+          cmake -B build \
+            -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
+            -DBUILD_TESTS=${{env.BUILD_TESTS}} \
+            -DBUILD_EXAMPLE=${{env.BUILD_EXAMPLE}} \
+            -DBUILD_V8_RENDERER=off
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build
+        run:  ctest --output-on-failure --no-tests=error
+
+
   windows-build:
     name: Windows, mingw, ${{matrix.build_type}}
     runs-on: windows-2019
