@@ -125,7 +125,16 @@ The library is tested with following compilers.
 
 #### Microsoft Windows
 
-* MinGW 8.5.0 (QuickJs only, use -DBUILD_V8_RENDERER=off)
+Only QuickJS supported, build with `-DBUILD_V8_RENDERER=off`. ThreadLocalRenderer is not supported using MinGW and will
+raise a compiler error is you accidentally use it.
+
+* MinGW latest installed from MSYS2.
+
+#### Apple macOS
+
+Only QuickJS supported, build with `-DBUILD_V8_RENDERER=off`.
+
+* AppleClang on macOS 10.15.
 
 ### Dependencies
 
