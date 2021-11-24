@@ -31,9 +31,6 @@ namespace complate {
  *
  * @attention Due limitations of `thread_local` it' its only be possible to
  * create one `ThreadLocalRenderer` per application.
- * @attention The underlying Renderer will not be deleted after deconstructing
- * the `ThreadLocalRenderer`. In order to free up Resources you have to call
- * reset() from the thread who called `render()`.
  */
 class ThreadLocalRenderer : public Renderer {
 public:
