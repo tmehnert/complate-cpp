@@ -112,4 +112,4 @@ jobs:
 
       - name: Test
         working-directory: ${{github.workspace}}/build
-        run:  ctest --output-on-failure --no-tests=error
+        run:  test/lib/complate-tests.exe --order lex
