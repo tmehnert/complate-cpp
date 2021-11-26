@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "before:version:bump": "npx auto-changelog"
+  },
+  "plugins": {
+    "@release-it/bumper": {
+      "in": {
+        "file": "VERSION",
+        "type": "text/plain"
+      },
+      "out": {
+        "file": "VERSION",
+        "type": "text/plain"
+      }
+    }
+  }
+}

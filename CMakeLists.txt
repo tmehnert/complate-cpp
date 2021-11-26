@@ -12,7 +12,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 cmake_minimum_required(VERSION 3.14)
-project(complate VERSION 0.0.1 DESCRIPTION "C++ library to render JSX-Components into HTML")
+file(READ "VERSION" VERSION_FILE)
+string(STRIP ${VERSION_FILE} VERSION_FILE)
+project(complate VERSION ${VERSION_FILE} DESCRIPTION "C++ library to render JSX-Components into HTML")
 include(cmake/CodeCoverage.cmake)
 
 set(EXCLUDE_FROM_ALL_ON_IMPORT EXCLUDE_FROM_ALL)
