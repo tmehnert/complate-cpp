@@ -1,6 +1,12 @@
 {
   "hooks": {
-    "before:version:bump": "npx auto-changelog"
+    "before:version:bump": "npx auto-changelog -v v${version}"
+  },
+  "git": {
+    "tagName": "v${version}"
+  },
+  "npm": {
+    "publish": false
   },
   "plugins": {
     "@release-it/bumper": {
