@@ -10,7 +10,7 @@
     "compile": "faucet --compact"
   },
   "dependencies": {
-    "complate-stream": "^0.16.9"
+    "complate-stream": "^0.16.10"
   },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.14.9",
