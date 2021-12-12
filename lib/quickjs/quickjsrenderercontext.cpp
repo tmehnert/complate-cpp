@@ -30,12 +30,6 @@ QuickJsRendererContext::QuickJsRendererContext(
   }
 }
 
-QuickJsRendererContext::~QuickJsRendererContext() {
-  if (JS_GetContextOpaque(m_context) == this) {
-    JS_SetContextOpaque(m_context, nullptr);
-  }
-}
-
 QuickJsMapper& QuickJsRendererContext::mapper() { return m_mapper; }
 
 QuickJsUnmapper& QuickJsRendererContext::unmapper() {

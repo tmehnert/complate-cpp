@@ -28,7 +28,6 @@ class QuickJsRendererContext {
 public:
   explicit QuickJsRendererContext(
       JSContext *context, const std::vector<Prototype> &prototypes = {});
-  ~QuickJsRendererContext();
 
   [[nodiscard]] QuickJsMapper &mapper();
   [[nodiscard]] QuickJsUnmapper &unmapper();
